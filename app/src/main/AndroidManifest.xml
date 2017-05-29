@@ -39,6 +39,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.calendate.calendate.MainActivity" />
         </activity>
+        <activity android:name=".RegistrationActivity" />
+        <activity android:name=".IncorretDetailsDialog" />
+        <activity android:name=".ForgotPassword"></activity>
     </application>
 
 </manifest>
