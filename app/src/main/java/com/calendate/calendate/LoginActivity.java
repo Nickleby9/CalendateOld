@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnSend:
                 if (!etUsername.getText().toString().equals("no")){
                     Intent intent = new Intent(this,MainActivity.class);
+                    //for firebase login:
 //                    Intent intent = new Intent(this,EmailPasswordActivity.class);
                     startActivity(intent);
                 } else {
