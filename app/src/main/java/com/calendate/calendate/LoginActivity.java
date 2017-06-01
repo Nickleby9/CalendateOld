@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnLogin.setOnClickListener(this);
         tvSignin.setOnClickListener(this);
+
     }
 
     @Override

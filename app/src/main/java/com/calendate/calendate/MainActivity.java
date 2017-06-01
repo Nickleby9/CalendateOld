@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +15,10 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements ButtonsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ButtonsFragment.OnFragmentInteractionListener, SetButtonTitle.OnTitleSetListener {
 
     private static final String BUTTON_ID = "btnId";
+    String buttonTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(),"fragment_TAG").commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,4 +69,14 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
     }
 
 
+    @Override
+    public void onTitleSet(String title) {
+        Bundle bundle = new Bundle();
+        bundle.putString("btn_title",title);
+
+//        ButtonsFragment fb = new ButtonsFragment();
+        ButtonsFragment fb = (ButtonsFragment) getSupportFragmentManager().findFragmentByTag("fragment_TAG");
+        fb.setArguments(bundle);
+
+    }
 }

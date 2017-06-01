@@ -1,16 +1,20 @@
 package com.calendate.calendate;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.Button;
+import android.widget.Toast;
 
 
 /**
@@ -19,10 +23,11 @@ import android.widget.ImageButton;
  * {@link ButtonsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ButtonsFragment extends Fragment implements View.OnClickListener {
+public class ButtonsFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener{
 
     private OnFragmentInteractionListener mListener;
-    ImageButton btnTopLeft, btnTopRight, btnMiddleLeft, btnMiddleRight, btnBottomLeft, btnBottomRight;
+    private String buttonTitle;
+    Button btnTopLeft, btnTopRight, btnMiddleLeft, btnMiddleRight, btnBottomLeft, btnBottomRight;
 
     public ButtonsFragment() {
         // Required empty public constructor
@@ -32,7 +37,8 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+
         return inflater.inflate(R.layout.fragment_buttons, container, false);
     }
 
@@ -40,19 +46,31 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnTopLeft = (ImageButton) view.findViewById(R.id.btnTopLeft);
-        btnTopRight = (ImageButton) view.findViewById(R.id.btnTopRight);
-        btnMiddleLeft = (ImageButton) view.findViewById(R.id.btnMiddleLeft);
-        btnMiddleRight = (ImageButton) view.findViewById(R.id.btnMiddleRight);
-        btnBottomLeft = (ImageButton) view.findViewById(R.id.btnBottomLeft);
-        btnBottomRight = (ImageButton) view.findViewById(R.id.btnBottomRight);
+        btnTopLeft = (Button) view.findViewById(R.id.btnTopLeft);
+        btnTopRight = (Button) view.findViewById(R.id.btnTopRight);
+        btnMiddleLeft = (Button) view.findViewById(R.id.btnMiddleLeft);
+        btnMiddleRight = (Button) view.findViewById(R.id.btnMiddleRight);
+        btnBottomLeft = (Button) view.findViewById(R.id.btnBottomLeft);
+        btnBottomRight = (Button) view.findViewById(R.id.btnBottomRight);
 
+        if (savedInstanceState != null) {
+            buttonTitle = getArguments().getString("btn_title", "");
+            btnTopLeft.setText(buttonTitle);
+        }
         btnTopLeft.setOnClickListener(this);
         btnTopRight.setOnClickListener(this);
         btnMiddleLeft.setOnClickListener(this);
         btnMiddleRight.setOnClickListener(this);
         btnBottomLeft.setOnClickListener(this);
         btnBottomRight.setOnClickListener(this);
+
+        btnTopLeft.setOnLongClickListener(this);
+        btnTopRight.setOnLongClickListener(this);
+        btnMiddleLeft.setOnLongClickListener(this);
+        btnMiddleRight.setOnLongClickListener(this);
+        btnBottomLeft.setOnLongClickListener(this);
+        btnBottomRight.setOnLongClickListener(this);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -103,6 +121,55 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
+    @Override
+    public boolean onLongClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            case R.id.btnTopLeft:
+                showButtonOptionsDialog(v);
+                break;
+            case R.id.btnTopRight:
+
+                break;
+            case R.id.btnMiddleLeft:
+
+                break;
+            case R.id.btnMiddleRight:
+
+                break;
+            case R.id.btnBottomLeft:
+
+                break;
+            case R.id.btnBottomRight:
+
+                break;
+        }
+        return false;
+    }
+
+    public void showButtonOptionsDialog(View v){
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setTitle("Choose an option")
+                .setItems(R.array.buttonOptions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                SetButtonTitle f = new SetButtonTitle();
+                                f.show(getFragmentManager(), "setButtonTitle");
+                                break;
+                            case 1:
+
+                                break;
+                            case 2:
+
+                                break;
+                        }
+                    }
+                }).show();
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
