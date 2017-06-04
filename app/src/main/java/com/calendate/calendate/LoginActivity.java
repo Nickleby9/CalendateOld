@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Details incorrect")
-                            .setMessage("Unknown usernname or bad password.")
+                            .setMessage("Unknown user name or bad password.")
                             .setPositiveButton("Try again", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

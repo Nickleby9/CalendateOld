@@ -1,10 +1,9 @@
 package com.calendate.calendate;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Button;
-import android.widget.Toast;
 
 
 /**
@@ -23,8 +20,10 @@ import android.widget.Toast;
  * {@link ButtonsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ButtonsFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener{
+public class ButtonsFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
+    private static final String BUTTON_ID = "button_id";
+    private static final int PICK_IMAGE_REQUEST = 1;
     private OnFragmentInteractionListener mListener;
     private String buttonTitle;
     Button btnTopLeft, btnTopRight, btnMiddleLeft, btnMiddleRight, btnBottomLeft, btnBottomRight;
@@ -100,7 +99,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.btnTopLeft:
                 mListener.onFragmentInteraction(R.id.btnTopLeft);
                 break;
@@ -125,49 +124,39 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
     @Override
     public boolean onLongClick(View v) {
         int id = v.getId();
-        switch (id) {
-            case R.id.btnTopLeft:
-                showButtonOptionsDialog(v);
-                break;
-            case R.id.btnTopRight:
-
-                break;
-            case R.id.btnMiddleLeft:
-
-                break;
-            case R.id.btnMiddleRight:
-
-                break;
-            case R.id.btnBottomLeft:
-
-                break;
-            case R.id.btnBottomRight:
-
-                break;
-        }
+        showButtonOptionsDialog(v, id);
         return false;
     }
 
-    public void showButtonOptionsDialog(View v){
+    public void showButtonOptionsDialog(final View v, final int btnId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-        builder.setTitle("Choose an option")
-                .setItems(R.array.buttonOptions, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                SetButtonTitle f = new SetButtonTitle();
-                                f.show(getFragmentManager(), "setButtonTitle");
-                                break;
-                            case 1:
-
-                                break;
-                            case 2:
-
-                                break;
-                        }
-                    }
-                }).show();
+        builder.setTitle("What would you like to do?");
+        builder.setItems(R.array.buttonOptions, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        //Change title
+                        SetButtonTitleDialog f = new SetButtonTitleDialog();
+                        Bundle args = new Bundle();
+                        args.putInt(BUTTON_ID, btnId);
+                        f.setArguments(args);
+                        f.show(getFragmentManager(), "setButtonTitleDialog");
+                        break;
+                    case 1:
+                        //Change image
+                        Intent intent = new Intent();
+                        intent.setType("image/*").setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent,"Select an icon"), PICK_IMAGE_REQUEST);
+                        break;
+                    case 2:
+                        //Delete - are you sure? -remove title and link to data
+                        setButtonText((Button) v.findViewById(btnId), "");
+                        break;
+                }
+            }
+        });
+        builder.show();
     }
 
 
@@ -184,5 +173,9 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(int btnId);
+    }
+
+    public void setButtonText(Button button, String text){
+        button.setText(text);
     }
 }

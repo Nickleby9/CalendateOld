@@ -23,6 +23,9 @@ public class DetailActivity extends AppCompatActivity implements DataSource.OnDa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+//        Intent intent = new Intent();
+//        intent.getIntExtra("btnId", 0);
+
         recycler = (RecyclerView) findViewById(R.id.recycler);
         DataSource.fetchItems(this);
 
@@ -30,15 +33,11 @@ public class DetailActivity extends AppCompatActivity implements DataSource.OnDa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), AddItem.class);
+                startActivity(intent);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        Intent intent = new Intent();
-        intent.getIntExtra("btnId", 0);
-
     }
 
     @Override
