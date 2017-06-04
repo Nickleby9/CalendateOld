@@ -71,12 +71,13 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
 
     @Override
     public void onTitleSet(String title) {
-        Bundle bundle = new Bundle();
-        bundle.putString("btn_title",title);
+        Fragment setTitle = getSupportFragmentManager().findFragmentByTag("fragment_TAG");
+        if (setTitle != null){
+            ButtonsFragment bf = (ButtonsFragment) setTitle;
+            bf.btnTopLeft.setText(title);
+        }
 
-//        ButtonsFragment fb = new ButtonsFragment();
-        ButtonsFragment fb = (ButtonsFragment) getSupportFragmentManager().findFragmentByTag("fragment_TAG");
-        fb.setArguments(bundle);
+
 
     }
 }
