@@ -105,7 +105,6 @@ public class SetButtonTitleDialog extends DialogFragment implements TextWatcher 
 
 
     public interface OnTitleSetListener {
-        // TODO: Update argument type and name
         void onTitleSet(String title, int btnId);
     }
 }

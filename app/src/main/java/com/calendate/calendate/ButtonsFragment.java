@@ -13,13 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ButtonsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- */
 public class ButtonsFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
     private static final String BUTTON_ID = "button_id";
@@ -72,7 +65,6 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(int btnId) {
         if (mListener != null) {
             mListener.onFragmentInteraction(btnId);
@@ -100,26 +92,6 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
     public void onClick(View v) {
         int id = v.getId();
         mListener.onFragmentInteraction(id);
-
-//        switch (id) {
-//            case R.id.btnTopLeft:
-//                break;
-//            case R.id.btnTopRight:
-//
-//                break;
-//            case R.id.btnMiddleLeft:
-//
-//                break;
-//            case R.id.btnMiddleRight:
-//
-//                break;
-//            case R.id.btnBottomLeft:
-//
-//                break;
-//            case R.id.btnBottomRight:
-//
-//                break;
-//        }
     }
 
     @Override
@@ -131,7 +103,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
 
     public void showButtonOptionsDialog(final View v, final int btnId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-        builder.setTitle("What would you like to do?");
+        builder.setTitle(R.string.change_button_dialog_title);
         builder.setItems(R.array.buttonOptions, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -146,9 +118,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
                         break;
                     case 1:
                         //Change image
-                        Intent intent = new Intent();
-                        intent.setType("image/*").setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent,"Select an icon"), PICK_IMAGE_REQUEST);
+
                         break;
                     case 2:
                         //Delete - are you sure? -remove title and link to data
@@ -161,18 +131,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
     }
 
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(int btnId);
     }
 

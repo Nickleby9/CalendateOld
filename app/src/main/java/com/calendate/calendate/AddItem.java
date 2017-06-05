@@ -50,8 +50,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
     public void onClick(View v) {
         DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext());
         String btnText = btnDate.getText().toString();
-
-        if (btnText.equals("Pick a Date")) {
+        if (btnText.equals(getResources().getString(R.string.add_item_pick_a_date))) {
             c = Calendar.getInstance();
             pickerDialog = new DatePickerDialog(v.getContext(), this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         } else {

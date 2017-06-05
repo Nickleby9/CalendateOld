@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:text="Set the title for your button"
+        android:text="@string/button_title_title"
         android:textColor="#37474f"
         android:gravity="center"/>
 
@@ -22,7 +22,7 @@
         android:layout_width="297dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Button title"
+        android:hint="@string/button_title_hint"
         android:inputType="textPersonName"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
@@ -38,8 +38,7 @@
         android:id="@+id/btnSet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Set"
+        android:text="@string/button_title_set"
         android:layout_below="@+id/etTitle"
         android:layout_centerHorizontal="true"
         android:paddingTop="18dp" />
@@ -52,7 +51,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:text="Maximum length exceeded"
+        android:text="@string/button_title_error"
         android:textColor="#d50000"
         android:visibility="invisible" />
 

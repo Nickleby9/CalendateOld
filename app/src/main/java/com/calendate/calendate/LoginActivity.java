@@ -57,15 +57,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(intent);
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Details incorrect")
-                            .setMessage("Unknown user name or bad password.")
-                            .setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+                    builder.setTitle(R.string.login_error_title)
+                            .setMessage(R.string.login_error_description)
+                            .setPositiveButton(R.string.login_error_try, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
                             })
-                            .setNegativeButton("Forgot password", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(R.string.login_error_forgot, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ForgotPassword f = new ForgotPassword();

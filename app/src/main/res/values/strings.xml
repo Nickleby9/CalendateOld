@@ -7,9 +7,9 @@
     <string name="welcome_string">Welcome to Calendate!</string>
     <string name="register">not registered? sign in here</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_detail">detailActivity</string>
+
     <string name="add_item_alert_ahead">Alert ahead:</string>
     <string name="add_item_create_a_new_event">Create a new event</string>
     <string name="add_item_description">Description:</string>
@@ -17,6 +17,23 @@
     <string name="add_item_pick_a_date">Pick a Date</string>
     <string name="add_item_repeat">Repeat:</string>
     <string name="add_item_title">Title:</string>
+    <string name="forgot_password_email_address">Email address</string>
+    <string name="forgot_password_send">Send</string>
+    <string name="forgot_password_title">Enter your email below  \n and the password will be send to you.</string>
+    <string name="registration_username">Username</string>
+    <string name="registration_password">Password</string>
+    <string name="registration_repeat_password">Repeat password</string>
+    <string name="registration_email_address">Email address</string>
+    <string name="registration_register">Register</string>
+    <string name="button_title_title">Set the title for your button</string>
+    <string name="button_title_hint">Button title</string>
+    <string name="button_title_set">Set</string>
+    <string name="button_title_error">Maximum length exceeded</string>
+    <string name="change_button_dialog_title">What would you like to do?</string>
+    <string name="login_error_title">Details incorrect</string>
+    <string name="login_error_description">Unknown user name or bad password.</string>
+    <string name="login_error_try">Try again</string>
+    <string name="login_error_forgot">Forgot password</string>
 
     <string-array name="buttonOptions">
         <item>Change title</item>
