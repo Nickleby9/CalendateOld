@@ -10,6 +10,13 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_detail">detailActivity</string>
+    <string name="add_item_alert_ahead">Alert ahead:</string>
+    <string name="add_item_create_a_new_event">Create a new event</string>
+    <string name="add_item_description">Description:</string>
+    <string name="add_item_event_date">Event date:</string>
+    <string name="add_item_pick_a_date">Pick a Date</string>
+    <string name="add_item_repeat">Repeat:</string>
+    <string name="add_item_title">Title:</string>
 
     <string-array name="buttonOptions">
         <item>Change title</item>
@@ -17,7 +24,7 @@
         <item>Delete</item>
     </string-array>
 
-    <string-array name="days">
+    <string-array name="count">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -31,8 +38,8 @@
 
     <string-array name="kind">
         <item>Days</item>
-        <item>Week</item>
-        <item>Month</item>
-        <item>Year</item>
+        <item>Weeks</item>
+        <item>Months</item>
+        <item>Years</item>
     </string-array>
 </resources>

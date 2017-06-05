@@ -99,26 +99,27 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id) {
-            case R.id.btnTopLeft:
-                mListener.onFragmentInteraction(R.id.btnTopLeft);
-                break;
-            case R.id.btnTopRight:
+        mListener.onFragmentInteraction(id);
 
-                break;
-            case R.id.btnMiddleLeft:
-
-                break;
-            case R.id.btnMiddleRight:
-
-                break;
-            case R.id.btnBottomLeft:
-
-                break;
-            case R.id.btnBottomRight:
-
-                break;
-        }
+//        switch (id) {
+//            case R.id.btnTopLeft:
+//                break;
+//            case R.id.btnTopRight:
+//
+//                break;
+//            case R.id.btnMiddleLeft:
+//
+//                break;
+//            case R.id.btnMiddleRight:
+//
+//                break;
+//            case R.id.btnBottomLeft:
+//
+//                break;
+//            case R.id.btnBottomRight:
+//
+//                break;
+//        }
     }
 
     @Override
