@@ -57,6 +57,7 @@ public class ForgotPassword extends DialogFragment {
                 }
             }
         });
+
     }
 
 

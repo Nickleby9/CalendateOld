@@ -71,9 +71,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
             Button button = (Button) findViewById(btnId);
             bf.setButtonText(button, title);
         }
-
-
-
     }
 
     @Override
@@ -82,9 +79,8 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         } else {
-            Intent intent = getIntent();
-            String user = intent.getStringExtra("user");
-            tvUser.setText("Hello " + user);
+            String displayName = firebaseAuth.getCurrentUser().getDisplayName();
+            tvUser.setText("Hello " + displayName);
         }
     }
 

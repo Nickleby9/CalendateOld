@@ -25,7 +25,6 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,10 +44,6 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
         btnBottomLeft = (Button) view.findViewById(R.id.btnBottomLeft);
         btnBottomRight = (Button) view.findViewById(R.id.btnBottomRight);
 
-        if (savedInstanceState != null) {
-            buttonTitle = getArguments().getString("btn_title", "");
-            btnTopLeft.setText(buttonTitle);
-        }
         btnTopLeft.setOnClickListener(this);
         btnTopRight.setOnClickListener(this);
         btnMiddleLeft.setOnClickListener(this);
@@ -63,6 +58,15 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
         btnBottomLeft.setOnLongClickListener(this);
         btnBottomRight.setOnLongClickListener(this);
 
+    }
+
+    public static ButtonsFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        ButtonsFragment fragment = new ButtonsFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public void onButtonPressed(int btnId) {
