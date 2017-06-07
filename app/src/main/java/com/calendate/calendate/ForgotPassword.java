@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.zip.Inflater;
 
 public class ForgotPassword extends DialogFragment {
@@ -26,7 +30,7 @@ public class ForgotPassword extends DialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         btnSend = (Button) view.findViewById(R.id.btnSend);
@@ -35,8 +39,22 @@ public class ForgotPassword extends DialogFragment {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Sent!", Toast.LENGTH_SHORT).show();
+                String email = etEmail.getText().toString();
+                if (!email.equals("")){
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(view.getContext(), "Email sent!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 dismiss();
+            } else {
+                    etEmail.setError("Email can not be empty");
+                    etEmail.requestFocus();
+                }
             }
         });
     }

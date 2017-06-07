@@ -34,6 +34,12 @@
     <string name="login_error_description">Unknown user name or bad password.</string>
     <string name="login_error_try">Try again</string>
     <string name="login_error_forgot">Forgot password</string>
+    <string name="main_logout">Logout</string>
+    <string name="error_weak_password">Password is too weak</string>
+    <string name="error_invalid_email">Email is not valid</string>
+    <string name="error_user_exists">user already exist</string>
+    <string name="error_empty_fields">Fields can not be empty</string>
+    <string name="error_mismatch_passwords">Passwords do not match</string>
 
     <string-array name="buttonOptions">
         <item>Change title</item>
