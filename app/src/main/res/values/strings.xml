@@ -40,6 +40,7 @@
     <string name="error_user_exists">user already exist</string>
     <string name="error_empty_fields">Fields can not be empty</string>
     <string name="error_mismatch_passwords">Passwords do not match</string>
+    <string name="back_twice">Press back again to exit</string>
 
     <string-array name="buttonOptions">
         <item>Change title</item>

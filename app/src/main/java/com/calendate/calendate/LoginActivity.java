@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            System.exit(0);
             ActivityCompat.finishAffinity(this);
         } else {
-            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.back_twice, Toast.LENGTH_SHORT).show();
             exit = true;
         }
     }
