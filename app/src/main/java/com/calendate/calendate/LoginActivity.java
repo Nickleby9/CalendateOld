@@ -1,31 +1,30 @@
 package com.calendate.calendate;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.BootstrapText;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnLogin;
+    BootstrapButton btnLogin;
     TextView tvSignin;
     EditText etUsername, etPassword;
     FirebaseAuth mAuth;
@@ -37,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btnLogin = (Button) findViewById(R.id.btnSend);
+        btnLogin = (BootstrapButton) findViewById(R.id.btnLogin);
         tvSignin = (TextView) findViewById(R.id.tvSignin);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
@@ -47,6 +46,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mAuth = FirebaseAuth.getInstance();
 
+//        BootstrapText text = new BootstrapText.Builder(this).addFontAwesomeIcon("{fa-facebook").build();
+//        btnLogin.setBootstrapText(text);
+
     }
 
     @Override
@@ -54,18 +56,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         int id = v.getId();
 
         switch (id) {
-            case R.id.btnSend:
+            case R.id.btnLogin:
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
                 if (!username.equals("") && !password.equals("")) {
+                    showProgress(true);
                     mAuth.signInWithEmailAndPassword(username, password)
                             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(Task<AuthResult> task) {
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     if (user != null) {
+                                        showProgress(false);
                                         String displayName = user.getDisplayName();
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         intent.putExtra("user", displayName);
                                         startActivity(intent);
                                     }
@@ -74,8 +79,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     }
                                 }
                             });
-
-
                 } else {
                     detailsIncorrect();
                 }
@@ -95,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        showProgress(false);
                     }
                 })
                 .setNegativeButton(R.string.login_error_forgot, new DialogInterface.OnClickListener() {
@@ -109,12 +113,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        if (exit) {
-//            System.exit(0);
-            ActivityCompat.finishAffinity(this);
-        } else {
+        if (!exit) {
             Toast.makeText(this, R.string.back_twice, Toast.LENGTH_SHORT).show();
             exit = true;
+        } else {
+            ActivityCompat.finishAffinity(this);
         }
+    }
+
+    private ProgressDialog dialog;
+
+    private void showProgress(boolean show) {
+        if (dialog == null) {
+            //TODO:not dismissable
+            dialog = new ProgressDialog(this);
+            dialog.setMessage("Logging in...");
+            dialog.setTitle("Connecting to server");
+        }
+        if (show)
+            dialog.show();
+        else
+            dialog.dismiss();
     }
 }

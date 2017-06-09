@@ -2,7 +2,6 @@ package com.calendate.calendate;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.zip.Inflater;
 
 public class ForgotPassword extends DialogFragment {
 
@@ -33,7 +30,7 @@ public class ForgotPassword extends DialogFragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnSend = (Button) view.findViewById(R.id.btnSend);
+        btnSend = (Button) view.findViewById(R.id.btnLogin);
         etEmail = (EditText) view.findViewById(R.id.etEmail);
 
         btnSend.setOnClickListener(new View.OnClickListener() {
