@@ -1,34 +1,48 @@
 package com.calendate.calendate;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapText;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+import static com.beardedhen.androidbootstrap.font.FontAwesome.FA_SIGN_IN;
 
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+
+    private static final int RC_GOOGLE_LOGIN = 1;
     BootstrapButton btnLogin;
+    SignInButton btnGoogle;
     TextView tvSignin;
     EditText etUsername, etPassword;
     FirebaseAuth mAuth;
     Boolean exit = false;
+    GoogleApiClient mApiClient;
 
 
     @Override
@@ -40,14 +54,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tvSignin = (TextView) findViewById(R.id.tvSignin);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
+        btnGoogle = (SignInButton) findViewById(R.id.btnGoogle);
 
         btnLogin.setOnClickListener(this);
         tvSignin.setOnClickListener(this);
+        btnGoogle.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
 
-//        BootstrapText text = new BootstrapText.Builder(this).addFontAwesomeIcon("{fa-facebook").build();
-//        btnLogin.setBootstrapText(text);
+        btnLogin.setBootstrapText(new BootstrapText.Builder(this)
+                .addText(getString(R.string.btn_login) + " ")
+                .addFontAwesomeIcon(FA_SIGN_IN)
+                .build()
+        );
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
     }
 
@@ -62,23 +91,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (!username.equals("") && !password.equals("")) {
                     showProgress(true);
                     mAuth.signInWithEmailAndPassword(username, password)
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                 @Override
-                                public void onComplete(Task<AuthResult> task) {
+                                public void onSuccess(AuthResult authResult) {
+                                    showProgress(false);
                                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                     if (user != null) {
-                                        showProgress(false);
-                                        String displayName = user.getDisplayName();
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.putExtra("user", displayName);
                                         startActivity(intent);
                                     }
-                                    if (!task.isSuccessful()) {
-                                        detailsIncorrect();
-                                    }
                                 }
-                            });
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            showProgress(false);
+                            detailsIncorrect();
+                        }
+                    });
                 } else {
                     detailsIncorrect();
                 }
@@ -87,6 +117,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Intent intent1 = new Intent(this, RegistrationActivity.class);
                 startActivity(intent1);
                 break;
+            case R.id.btnGoogle:
+                Intent googleIntent = Auth.GoogleSignInApi
+                        .getSignInIntent(mApiClient);
+                startActivityForResult(googleIntent, RC_GOOGLE_LOGIN);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_GOOGLE_LOGIN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi
+                    .getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                GoogleSignInAccount account = result.getSignInAccount();
+                AuthCredential credential = GoogleAuthProvider
+                        .getCredential(account.getIdToken(), null);
+                mAuth.signInWithCredential(credential)
+                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Ness", e.toString());
+                        Toast.makeText(LoginActivity.this,e.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Permissions has not been granted", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -125,14 +191,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void showProgress(boolean show) {
         if (dialog == null) {
-            //TODO:not dismissable
             dialog = new ProgressDialog(this);
-            dialog.setMessage("Logging in...");
-            dialog.setTitle("Connecting to server");
+            dialog.setTitle(getString(R.string.logging));
+            dialog.setMessage(etUsername.getText());
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
         }
         if (show)
             dialog.show();
         else
             dialog.dismiss();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(this, "Failed to connect to Google API services", Toast.LENGTH_SHORT).show();
     }
 }

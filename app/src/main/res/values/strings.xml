@@ -42,6 +42,8 @@
     <string name="error_mismatch_passwords">Passwords do not match</string>
     <string name="back_twice">Press back again to exit</string>
     <string name="sign_out">Sign out</string>
+    <string name="registering">Registering...</string>
+    <string name="logging">Logging in...</string>
 
     <string-array name="buttonOptions">
         <item>Change title</item>

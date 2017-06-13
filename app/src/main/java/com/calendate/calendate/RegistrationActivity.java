@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,13 +73,22 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                                     .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                                         @Override
                                         public void onComplete(Task<AuthResult> task) {
-                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             UserProfileChangeRequest change = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
                                             if (user != null) {
-                                                user.updateProfile(change);
-                                                Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-                                                intent.putExtra("user", username);
-                                                startActivity(intent);
+                                                user.updateProfile(change).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        user.reload().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                                                                startActivity(intent);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+
                                             }
                                         }
                                     });
@@ -116,10 +126,11 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
     private void showProgress(boolean show) {
         if (dialog == null) {
-            //TODO:not dismissable
             dialog = new ProgressDialog(this);
-            dialog.setMessage("Registering the account...");
-            dialog.setTitle("Connecting to server");
+            dialog.setTitle(getString(R.string.registering));
+            dialog.setMessage(etEmail.getText());
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
         }
         if (show)
             dialog.show();

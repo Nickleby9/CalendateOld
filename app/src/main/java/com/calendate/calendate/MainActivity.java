@@ -14,11 +14,16 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements ButtonsFragment.OnFragmentInteractionListener, SetButtonTitleDialog.OnTitleSetListener, FirebaseAuth.AuthStateListener {
 
     private static final String BUTTON_ID = "btnId";
+    private static final int RC_FIREBASE_SIGNIN = 2;
     TextView tvUser;
     String buttonTitle;
 
@@ -34,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         FirebaseAuth.getInstance().addAuthStateListener(this);
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(),"fragment_TAG").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "fragment_TAG").commit();
     }
 
     @Override
@@ -56,17 +61,32 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO:
     @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        if (firebaseAuth.getCurrentUser() == null){
+    public void onAuthStateChanged(@NonNull FirebaseAuth user) {
+        if (user.getCurrentUser() == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
+//            startActivityForResult(AuthUI.getInstance()
+//                    .createSignInIntentBuilder()
+//                    .setProviders(
+//                            Arrays.asList(new AuthUI.IdpConfig.Builder(
+//                                            AuthUI.EMAIL_PROVIDER).build(),
+//                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
+//                                            .setPermissions(Arrays.asList(Scopes.PROFILE, Scopes.EMAIL))
+//                                            .build()))
+//                    .build(), RC_FIREBASE_SIGNIN);
         } else {
-            String displayName = firebaseAuth.getCurrentUser().getDisplayName();
+            user.getCurrentUser().reload();
+            String displayName = user.getCurrentUser().getDisplayName();
             tvUser.setText("Hello " + displayName);
         }
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//    }
 
     @Override
     public void onFragmentInteraction(int btnId) {
@@ -79,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
     @Override
     public void onTitleSet(String title, int btnId) {
         Fragment setTitle = getSupportFragmentManager().findFragmentByTag("fragment_TAG");
-        if (setTitle != null){
+        if (setTitle != null) {
             ButtonsFragment bf = (ButtonsFragment) setTitle;
             Button button = (Button) findViewById(btnId);
             bf.setButtonText(button, title);
