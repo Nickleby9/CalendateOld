@@ -52,8 +52,6 @@
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
         android:layout_marginTop="32dp"
         android:text="@string/add_item_event_date"
         android:textColor="#000"
@@ -65,8 +63,6 @@
         android:id="@+id/tvAlert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
         android:layout_marginTop="32dp"
         android:text="@string/add_item_alert_ahead"
         android:textColor="#000"
@@ -78,8 +74,6 @@
         android:id="@+id/tvRepeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
         android:layout_marginTop="32dp"
         android:text="@string/add_item_repeat"
         android:textColor="#000"
@@ -92,9 +86,7 @@
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="0dp"
         android:layout_marginRight="16dp"
-        android:layout_marginStart="0dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvTitle"
@@ -113,40 +105,76 @@
         app:layout_constraintLeft_toRightOf="@+id/tvDescription"
         app:layout_constraintRight_toRightOf="@+id/etTitle" />
 
-    <Button
+    <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnDate"
         android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:text="@string/add_item_pick_a_date"
-        android:textAllCaps="false"
+        app:bootstrapSize="lg"
+        app:bootstrapBrand="regular"
+        app:buttonMode="regular"
+        app:showOutline="false"
+        app:roundedCorners="true"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvDate"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="@+id/etDescription"
-        app:layout_constraintRight_toRightOf="@+id/etDescription" />
+        app:layout_constraintRight_toRightOf="@+id/etDescription"/>
 
     <Spinner
         android:id="@+id/spnCount"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/tvAlert"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintLeft_toLeftOf="@+id/btnDate"
         app:layout_constraintRight_toLeftOf="@+id/spnKind"
-        app:layout_constraintTop_toTopOf="@+id/tvAlert" />
+        app:layout_constraintTop_toTopOf="@+id/tvAlert"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/btnDate" />
 
     <Spinner
         android:id="@+id/spnKind"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
         app:layout_constraintHorizontal_weight="3"
         app:layout_constraintLeft_toRightOf="@+id/spnCount"
         app:layout_constraintRight_toRightOf="@+id/btnDate"
         app:layout_constraintTop_toTopOf="@+id/spnCount" />
+
+    <Spinner
+        android:id="@+id/spnRepeat"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvRepeat"
+        app:layout_constraintLeft_toLeftOf="@+id/spnCount"
+        app:layout_constraintRight_toRightOf="@+id/spnKind"
+        app:layout_constraintTop_toTopOf="@+id/tvRepeat" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/btnSave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/add_item_save"
+        app:bootstrapSize="lg"
+        app:bootstrapBrand="regular"
+        app:buttonMode="regular"
+        app:showOutline="false"
+        app:roundedCorners="true"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/spnRepeat"
+        app:layout_constraintLeft_toLeftOf="@+id/tvRepeat" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/btnClear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/add_item_clear"
+        app:bootstrapSize="lg"
+        app:bootstrapBrand="regular"
+        app:buttonMode="regular"
+        app:showOutline="false"
+        app:roundedCorners="true"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/spnRepeat"
+        app:layout_constraintRight_toRightOf="@+id/spnRepeat" />
 
 </android.support.constraint.ConstraintLayout>

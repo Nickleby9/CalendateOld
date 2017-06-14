@@ -12,6 +12,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,9 +21,9 @@ import java.util.Date;
 
 public class AddItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
-    Spinner spnCount, spnKind;
+    Spinner spnCount, spnKind, spnRepeat;
     EditText etTitle, etDescription;
-    Button btnDate;
+    BootstrapButton btnDate, btnSave, btnClear;
     Date date;
     Calendar c;
 
@@ -32,8 +34,16 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
         spnCount = (Spinner) findViewById(R.id.spnCount);
         spnKind = (Spinner) findViewById(R.id.spnKind);
-        btnDate = (Button) findViewById(R.id.btnDate);
+        spnRepeat = (Spinner) findViewById(R.id.spnRepeat);
+        btnDate = (BootstrapButton) findViewById(R.id.btnDate);
+        btnSave = (BootstrapButton) findViewById(R.id.btnSave);
+        btnClear = (BootstrapButton) findViewById(R.id.btnClear);
         btnDate.setOnClickListener(this);
+
+        btnDate.setBootstrapBrand(new CustomBootstrapStyle(this));
+        btnSave.setBootstrapBrand(new CustomBootstrapStyle(this));
+        btnClear.setBootstrapBrand(new CustomBootstrapStyle(this));
+
 
         ArrayAdapter<CharSequence> spnCountAdapter = ArrayAdapter.createFromResource(this, R.array.count, R.layout.spinner_item);
         spnCountAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -42,6 +52,10 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         ArrayAdapter<CharSequence> spnKindAdapter = ArrayAdapter.createFromResource(this, R.array.kind, R.layout.spinner_item);
         spnKindAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spnKind.setAdapter(spnKindAdapter);
+
+        ArrayAdapter<CharSequence> spnRepeatAdapter = ArrayAdapter.createFromResource(this, R.array.repeat, R.layout.spinner_item);
+        spnKindAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spnRepeat.setAdapter(spnRepeatAdapter);
 
     }
 

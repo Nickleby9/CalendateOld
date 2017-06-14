@@ -55,8 +55,12 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         switch (id) {
             case R.id.action_settings:
                 return true;
+            case R.id.action_delete:
+                FirebaseAuth.getInstance().getCurrentUser().delete();
+                return true;
             case R.id.action_sign_out:
                 FirebaseAuth.getInstance().signOut();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
