@@ -1,11 +1,8 @@
 package com.calendate.calendate;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -15,18 +12,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapText;
-import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,7 +36,7 @@ import static com.beardedhen.androidbootstrap.font.FontAwesome.FA_USER_PLUS;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_GOOGLE_LOGIN = 1;
-    BootstrapButton btnLogin, btnResiter;
+    BootstrapButton btnLogin, btnRegister;
     Button btnGoogle;
     EditText etUsername, etPassword;
     FirebaseAuth mAuth;
@@ -56,16 +50,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         btnLogin = (BootstrapButton) findViewById(R.id.btnLogin);
-        btnResiter = (BootstrapButton) findViewById(R.id.btnRegister);
+        btnRegister = (BootstrapButton) findViewById(R.id.btnRegister);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btnGoogle = (Button) findViewById(R.id.btnGoogle);
 
         btnLogin.setBootstrapBrand(new CustomBootstrapStyle(this));
-        btnResiter.setBootstrapBrand(new CustomBootstrapStyle(this));
+        btnRegister.setBootstrapBrand(new CustomBootstrapStyle(this));
 
         btnLogin.setOnClickListener(this);
-        btnResiter.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
         btnGoogle.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
@@ -76,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .build()
         );
 
-        btnResiter.setBootstrapText(new BootstrapText.Builder(this)
+        btnRegister.setBootstrapText(new BootstrapText.Builder(this)
                 .addText(getString(R.string.btn_register) + " ")
                 .addFontAwesomeIcon(FA_USER_PLUS)
                 .build()

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +24,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnRegister;
+    BootstrapButton btnRegister;
     EditText etUsername, etPassword, etPassword2, etEmail;
     private FirebaseAuth mAuth;
     TextView tvError;
@@ -37,8 +38,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         etPassword = (EditText) findViewById(R.id.etPassword);
         etPassword2 = (EditText) findViewById(R.id.etPassword2);
         etEmail = (EditText) findViewById(R.id.etEmail);
-        btnRegister = (Button) findViewById(R.id.btnRegister);
         tvError = (TextView) findViewById(R.id.tvError);
+        btnRegister = (BootstrapButton) findViewById(R.id.btnRegister);
+        btnRegister.setBootstrapBrand(new CustomBootstrapStyle(this));
 
         btnRegister.setOnClickListener(this);
 
