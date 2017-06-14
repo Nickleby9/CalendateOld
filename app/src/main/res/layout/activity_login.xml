@@ -6,65 +6,33 @@
     android:layout_height="match_parent"
     tools:context="com.calendate.calendate.LoginActivity">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
-        android:textSize="24sp"
-        android:textStyle="bold"
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="fitCenter"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
-
-
-    <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/btnLogin"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_login"
-        app:bootstrapText="@string/btn_login"
-        app:bootstrapBrand="info"
-        app:bootstrapSize="lg"
-        app:buttonMode="regular"
-        app:showOutline="false"
-        app:roundedCorners="true"
-        android:layout_marginTop="-2dp"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/etPassword"
-        app:layout_constraintRight_toLeftOf="@+id/tvSignin"
-        android:layout_marginRight="24dp"
-        app:layout_constraintHorizontal_bias="1.0" />
-
-    <TextView
-        android:id="@+id/tvSignin"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:text="@string/register"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
-        app:layout_constraintTop_toTopOf="@+id/btnLogin"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="@+id/etPassword" />
+        app:srcCompat="@drawable/calendate_logo" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/tilUsername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo">
 
         <EditText
             android:id="@+id/etUsername"
@@ -76,27 +44,56 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/tilPassword"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/tilUsername"
-        app:layout_constraintRight_toRightOf="@+id/tilUsername"
-        app:layout_constraintLeft_toLeftOf="@+id/tilUsername">
-
-    </android.support.design.widget.TextInputLayout>
-
-    <EditText
-        android:id="@+id/etPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        android:hint="Password"
-        android:inputType="textPassword"
+        android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="@+id/tilUsername"
         app:layout_constraintRight_toRightOf="@+id/tilUsername"
-        app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/tilUsername">
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/btnLogin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_login"
+        app:bootstrapText="@string/btn_login"
+        app:bootstrapSize="lg"
+        app:bootstrapBrand="regular"
+        app:buttonMode="regular"
+        app:showOutline="false"
+        app:roundedCorners="true"
+        app:layout_constraintLeft_toLeftOf="@+id/tilPassword"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tilPassword"
+        app:layout_constraintRight_toLeftOf="@+id/btnRegister"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="0dp" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_register"
+        app:bootstrapSize="lg"
+        app:bootstrapBrand="regular"
+        app:buttonMode="regular"
+        app:showOutline="false"
+        app:roundedCorners="true"
+        app:layout_constraintRight_toRightOf="@+id/tilPassword"
+        app:layout_constraintTop_toTopOf="@+id/btnLogin"
+        app:layout_constraintLeft_toRightOf="@+id/btnLogin"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp" />
 
     <TextView
         android:id="@+id/idOr"
@@ -104,23 +101,40 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="32dp"
-        android:text="OR"
+        android:layout_marginTop="24dp"
+        android:text="@string/other_signin"
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+        app:layout_constraintHorizontal_bias="0.502"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
-    <com.google.android.gms.common.SignInButton
+    <Button
         android:id="@+id/btnGoogle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/idOr"
+        style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
+        android:layout_width="0dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/sign_in_with_google"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.501" />
+        app:layout_constraintTop_toBottomOf="@+id/idOr" />
+
+    <Button
+        android:id="@+id/facebook_button"
+        style="@style/FirebaseUI.Button.AccountChooser.FacebookButton"
+        android:layout_width="0dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/sign_in_with_facebook"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintLeft_toLeftOf="@+id/btnGoogle"
+        app:layout_constraintRight_toRightOf="@+id/btnGoogle"
+        app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
 
 </android.support.constraint.ConstraintLayout>

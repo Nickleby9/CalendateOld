@@ -44,6 +44,8 @@
     <string name="sign_out">Sign out</string>
     <string name="registering">Registering...</string>
     <string name="logging">Logging in...</string>
+    <string name="other_signin">Or sign in using:</string>
+    <string name="btn_register">Register</string>
 
     <string-array name="buttonOptions">
         <item>Change title</item>
