@@ -38,7 +38,8 @@
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:textDirection="ltr"
+            android:hint="@string/email"
             android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
@@ -55,7 +56,8 @@
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:textDirection="ltr"
+            android:hint="@string/password"
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
@@ -75,8 +77,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tilPassword"
         app:layout_constraintRight_toLeftOf="@+id/btnRegister"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="0dp" />
+        android:layout_marginRight="8dp" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnRegister"
@@ -92,15 +93,12 @@
         app:layout_constraintTop_toTopOf="@+id/btnLogin"
         app:layout_constraintLeft_toRightOf="@+id/btnLogin"
         android:layout_marginTop="0dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="0dp" />
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/idOr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="24dp"
         android:text="@string/other_signin"
         android:textSize="18sp"
@@ -109,6 +107,8 @@
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         app:layout_constraintHorizontal_bias="0.502"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp" />
 
     <Button
