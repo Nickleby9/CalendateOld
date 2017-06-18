@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +29,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
     private static final int PICK_IMAGE_REQUEST = 1;
     private OnFragmentInteractionListener mListener;
     private String buttonTitle;
-    Button btnTopLeft, btnTopRight, btnMiddleLeft, btnMiddleRight, btnBottomLeft, btnBottomRight;
+    BootstrapButton btnTopLeft, btnTopRight, btnMiddleLeft, btnMiddleRight, btnBottomLeft, btnBottomRight;
     FirebaseUser user;
     FirebaseDatabase mDatabase;
 
@@ -51,12 +52,20 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
         user = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance();
 
-        btnTopLeft = (Button) view.findViewById(R.id.btnTopLeft);
-        btnTopRight = (Button) view.findViewById(R.id.btnTopRight);
-        btnMiddleLeft = (Button) view.findViewById(R.id.btnMiddleLeft);
-        btnMiddleRight = (Button) view.findViewById(R.id.btnMiddleRight);
-        btnBottomLeft = (Button) view.findViewById(R.id.btnBottomLeft);
-        btnBottomRight = (Button) view.findViewById(R.id.btnBottomRight);
+        btnTopLeft = (BootstrapButton) view.findViewById(R.id.btnTopLeft);
+        btnTopRight = (BootstrapButton) view.findViewById(R.id.btnTopRight);
+        btnMiddleLeft = (BootstrapButton) view.findViewById(R.id.btnMiddleLeft);
+        btnMiddleRight = (BootstrapButton) view.findViewById(R.id.btnMiddleRight);
+        btnBottomLeft = (BootstrapButton) view.findViewById(R.id.btnBottomLeft);
+        btnBottomRight = (BootstrapButton) view.findViewById(R.id.btnBottomRight);
+
+        btnTopLeft.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnTopRight.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnMiddleLeft.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnMiddleRight.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnBottomLeft.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnBottomRight.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+
 
         btnTopLeft.setOnClickListener(this);
         btnTopRight.setOnClickListener(this);

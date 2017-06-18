@@ -13,11 +13,14 @@ public class CustomBootstrapStyle implements BootstrapBrand {
     @ColorInt private final int defaultFill;
     @ColorInt private final int defaultTextColor;
     @ColorInt private final int activeFill;
+    @ColorInt private final int edge;
 
     @SuppressWarnings("deprecation") public CustomBootstrapStyle(Context context) {
         defaultFill = Color.parseColor("#039be5");
         defaultTextColor = Color.WHITE;
         activeFill = Color.parseColor("#0288d1");
+        edge = 0;
+
     }
 
 
@@ -28,7 +31,7 @@ public class CustomBootstrapStyle implements BootstrapBrand {
 
     @Override
     public int defaultEdge(Context context) {
-        return 0;
+        return edge;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class CustomBootstrapStyle implements BootstrapBrand {
 
     @Override
     public int activeEdge(Context context) {
-        return 0;
+        return edge;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class CustomBootstrapStyle implements BootstrapBrand {
 
     @Override
     public int disabledEdge(Context context) {
-        return 0;
+        return edge;
     }
 
     @Override

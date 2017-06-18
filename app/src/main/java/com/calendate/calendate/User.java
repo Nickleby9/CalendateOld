@@ -1,5 +1,8 @@
 package com.calendate.calendate;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
 /**
  * Created by Hilay on 18-יוני-2017.
  */
@@ -8,6 +11,8 @@ public class User {
 
     String username;
     String email;
+    FirebaseDatabase mDatabase;
+    FirebaseUser user;
 
     public User() {
     }

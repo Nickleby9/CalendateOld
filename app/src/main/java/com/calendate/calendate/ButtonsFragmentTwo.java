@@ -11,13 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
     private static final String BUTTON_ID = "button_id";
     private static final int PICK_IMAGE_REQUEST = 1;
     private OnFragmentInteractionListener mListener;
     private String buttonTitle;
-    Button btnTopLeft, btnTopRight, btnMiddleLeft, btnMiddleRight, btnBottomLeft, btnBottomRight;
+    BootstrapButton btnTopLeft, btnTopRight, btnMiddleLeft, btnMiddleRight, btnBottomLeft, btnBottomRight;
+    FirebaseUser user;
+    FirebaseDatabase mDatabase;
 
     public ButtonsFragmentTwo() {
         // Required empty public constructor
@@ -35,12 +46,22 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        btnTopLeft = (Button) view.findViewById(R.id.btnTopLeft);
-        btnTopRight = (Button) view.findViewById(R.id.btnTopRight);
-        btnMiddleLeft = (Button) view.findViewById(R.id.btnMiddleLeft);
-        btnMiddleRight = (Button) view.findViewById(R.id.btnMiddleRight);
-        btnBottomLeft = (Button) view.findViewById(R.id.btnBottomLeft);
-        btnBottomRight = (Button) view.findViewById(R.id.btnBottomRight);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance();
+
+        btnTopLeft = (BootstrapButton) view.findViewById(R.id.btnTopLeft);
+        btnTopRight = (BootstrapButton) view.findViewById(R.id.btnTopRight);
+        btnMiddleLeft = (BootstrapButton) view.findViewById(R.id.btnMiddleLeft);
+        btnMiddleRight = (BootstrapButton) view.findViewById(R.id.btnMiddleRight);
+        btnBottomLeft = (BootstrapButton) view.findViewById(R.id.btnBottomLeft);
+        btnBottomRight = (BootstrapButton) view.findViewById(R.id.btnBottomRight);
+
+        btnTopLeft.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnTopRight.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnMiddleLeft.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnMiddleRight.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnBottomLeft.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
+        btnBottomRight.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
 
         btnTopLeft.setOnClickListener(this);
         btnTopRight.setOnClickListener(this);
@@ -56,10 +77,87 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
         btnBottomLeft.setOnLongClickListener(this);
         btnBottomRight.setOnLongClickListener(this);
 
+        readButtonTitle();
+    }
+
+    private void readButtonTitle() {
+
+        String hex = MyUtils.fixEmail(user.getEmail());
+        mDatabase.getReference("buttons/2/" + hex + "/" + btnTopLeft.getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        btnTopLeft.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        mDatabase.getReference("buttons/2/" + hex + "/" + btnTopRight.getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        btnTopRight.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        mDatabase.getReference("buttons/2/" + hex + "/" + btnMiddleLeft.getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        btnMiddleLeft.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        mDatabase.getReference("buttons/2/" + hex + "/" + btnMiddleRight.getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        btnMiddleRight.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        mDatabase.getReference("buttons/2/" + hex + "/" + btnBottomLeft.getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        btnBottomLeft.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        mDatabase.getReference("buttons/2/" + hex + "/" + btnBottomRight.getId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        btnBottomRight.setText(dataSnapshot.getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     public static ButtonsFragmentTwo newInstance() {
-
         Bundle args = new Bundle();
 
         ButtonsFragmentTwo fragment = new ButtonsFragmentTwo();
@@ -93,7 +191,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        mListener.onFragmentInteraction(id);
+        onButtonPressed(id);
     }
 
     @Override
@@ -137,7 +235,21 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
         void onFragmentInteraction(int btnId);
     }
 
-    public void setButtonText(Button button, String text){
-        button.setText(text);
+    public void setButtonText(final Button button, String text) {
+        String hex = MyUtils.fixEmail(user.getEmail());
+        mDatabase.getReference("buttons/2/" + hex + "/" + button.getId()).setValue(text);
+
+        final DatabaseReference mRef = mDatabase.getReference("buttons/2/" + hex + "/" + button.getId());
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                button.setText(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
