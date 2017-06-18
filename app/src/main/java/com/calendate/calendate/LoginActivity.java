@@ -29,6 +29,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static com.beardedhen.androidbootstrap.font.FontAwesome.FA_SIGN_IN;
 import static com.beardedhen.androidbootstrap.font.FontAwesome.FA_USER_PLUS;
@@ -42,12 +43,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     FirebaseAuth mAuth;
     Boolean exit = false;
     GoogleApiClient mApiClient;
+    FirebaseDatabase mDatabase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mDatabase = FirebaseDatabase.getInstance();
 
         btnLogin = (BootstrapButton) findViewById(R.id.btnLogin);
         btnRegister = (BootstrapButton) findViewById(R.id.btnRegister);
@@ -96,29 +100,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnLogin:
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                if (!username.equals("") && !password.equals("")) {
-                    showProgress(true);
-                    mAuth.signInWithEmailAndPassword(username, password)
-                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                @Override
-                                public void onSuccess(AuthResult authResult) {
-                                    showProgress(false);
-                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                    if (user != null) {
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
+                if (username.contains("@")) {
+                    if (!username.equals("") && !password.equals("")) {
+                        showProgress(true);
+                        mAuth.signInWithEmailAndPassword(username, password)
+                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                    @Override
+                                    public void onSuccess(AuthResult authResult) {
+                                        showProgress(false);
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        if (user != null) {
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                        }
                                     }
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            showProgress(false);
-                            detailsIncorrect();
-                        }
-                    });
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                showProgress(false);
+                                detailsIncorrect();
+                            }
+                        });
+                    } else {
+                        detailsIncorrect();
+                    }
                 } else {
-                    detailsIncorrect();
+//                    mDatabase.getReference("users").
+
                 }
                 break;
             case R.id.btnRegister:

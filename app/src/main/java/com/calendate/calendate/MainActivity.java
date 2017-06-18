@@ -17,24 +17,29 @@ import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements ButtonsFragment.OnFragmentInteractionListener, SetButtonTitleDialog.OnTitleSetListener {
+public class MainActivity extends AppCompatActivity implements ButtonsFragment.OnFragmentInteractionListener,
+        SetButtonTitleDialog.OnTitleSetListener{
 
     private static final String BUTTON_ID = "btnId";
     private static final int RC_FIREBASE_SIGNIN = 2;
     TextView tvUser;
     FirebaseDatabase mDatabase;
     FirebaseAuth mAuth;
+    FirebaseUser user;
+    String buttonTitle;
+
     FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
             if (firebaseAuth.getCurrentUser() == null) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
-//            Auto Google UI Login
+//            -----Auto Google UI Login-----
 //            startActivityForResult(AuthUI.getInstance()
 //                    .createSignInIntentBuilder()
 //                    .setProviders(
@@ -45,14 +50,13 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
 //                                            .build()))
 //                    .build(), RC_FIREBASE_SIGNIN);
             } else {
-                firebaseAuth.getCurrentUser().reload();
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                user.reload();
                 String displayName = firebaseAuth.getCurrentUser().getDisplayName();
                 tvUser.setText("Hello " + displayName);
             }
         }
     };
-
-    String buttonTitle;
 
     @Override
     public void onStart() {
@@ -80,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         setSupportActionBar(toolbar);
         tvUser = (TextView) findViewById(R.id.tvUser);
 
-//        FirebaseAuth.getInstance().addAuthStateListener(this);
-
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "fragment_TAG").commit();
     }
 
@@ -108,33 +110,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onAuthStateChanged(@NonNull FirebaseAuth user) {
-//        if (user.getCurrentUser() == null) {
-//            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-//            startActivity(intent);
-////            Auto Google UI Login
-////            startActivityForResult(AuthUI.getInstance()
-////                    .createSignInIntentBuilder()
-////                    .setProviders(
-////                            Arrays.asList(new AuthUI.IdpConfig.Builder(
-////                                            AuthUI.EMAIL_PROVIDER).build(),
-////                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
-////                                            .setPermissions(Arrays.asList(Scopes.PROFILE, Scopes.EMAIL))
-////                                            .build()))
-////                    .build(), RC_FIREBASE_SIGNIN);
-//        } else {
-//            user.getCurrentUser().reload();
-//            String displayName = user.getCurrentUser().getDisplayName();
-//            tvUser.setText("Hello " + displayName);
-//        }
-//    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//    }
 
     @Override
     public void onFragmentInteraction(int btnId) {
@@ -142,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         intent.putExtra(BUTTON_ID, btnId);
         startActivity(intent);
     }
-
 
     @Override
     public void onTitleSet(String title, int btnId) {
@@ -153,5 +127,4 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
             bf.setButtonText(button, title);
         }
     }
-
 }

@@ -26,7 +26,6 @@ public class SetButtonTitleDialog extends DialogFragment implements TextWatcher 
     private static String BUTTON_ID = "button_id";
     private int btnId;
     private OnTitleSetListener mListener;
-
     Button btnSet;
     EditText etTitle;
     TextView tvWarning;

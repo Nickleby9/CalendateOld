@@ -4,15 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class Item {
+public class EventItem {
 
     private final String title;
+    private final String date;
 
-    public Item(String title) {
+    public EventItem(String title, String date) {
         this.title = title;
+        this.date = date;
     }
 
-    public String getTitle() {
-        return title;
-    }
 }
