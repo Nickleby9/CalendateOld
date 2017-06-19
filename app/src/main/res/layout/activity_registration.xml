@@ -69,6 +69,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="7dp"
+
         android:ems="10"
         android:hint="@string/registration_repeat_password"
         android:inputType="textPassword"

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,9 +25,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements ButtonsFragment.OnFragmentInteractionListener,
-        SetButtonTitleDialog.OnTitleSetListener{
+        SetButtonTitleDialog.OnTitleSetListener {
 
     private static final String BUTTON_ID = "btnId";
     private static final int RC_FIREBASE_SIGNIN = 2;
@@ -35,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
     FirebaseAuth mAuth;
     FirebaseUser user;
     String buttonTitle;
-
     FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -82,12 +83,15 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
 
         mDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tvUser = (TextView) findViewById(R.id.tvUser);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "fragment_TAG").commit();
+        if (user != null)
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "fragment_TAG").commit();
+
     }
 
     @Override
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         Fragment setTitle = getSupportFragmentManager().findFragmentByTag("fragment_TAG");
         if (setTitle != null) {
             ButtonsFragment bf = (ButtonsFragment) setTitle;
-            Button button = (Button) findViewById(btnId);
+            BootstrapButton button = (BootstrapButton) findViewById(btnId);
             bf.setButtonText(button, title);
         }
     }

@@ -81,7 +81,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
         btnBottomLeft.setOnLongClickListener(this);
         btnBottomRight.setOnLongClickListener(this);
 
-        readButtonTitle();
+            readButtonTitle();
     }
 
     private void readButtonTitle() {
@@ -226,7 +226,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
                         break;
                     case 2:
                         //Delete - are you sure? -remove title and link to data
-                        setButtonText((Button) v.findViewById(btnId), "");
+                        setButtonText((BootstrapButton) v.findViewById(btnId), "");
                         break;
                 }
             }
@@ -239,7 +239,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
         void onFragmentInteraction(int btnId);
     }
 
-    public void setButtonText(final Button button, String text) {
+    public void setButtonText(final BootstrapButton button, String text) {
         String hex = MyUtils.fixEmail(user.getEmail());
         mDatabase.getReference("buttons/1/" + hex + "/" + button.getId()).setValue(text);
 

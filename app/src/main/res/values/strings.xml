@@ -91,6 +91,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="btn_edit">Edit</string>
+    <string name="not_in_use">Not in use</string>
 
 
 </resources>
