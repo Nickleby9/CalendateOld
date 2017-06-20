@@ -3,6 +3,7 @@ package com.calendate.calendate;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -110,9 +114,10 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         String alertKind = spnKind.getSelectedItem().toString();
         String repeat = spnRepeat.getSelectedItem().toString();
 
-        Event event = new Event(title, description, c, alertCount, alertKind, repeat);
         String fixEmail = MyUtils.fixEmail(user.getEmail());
-        mDatabase.getReference("events/" + fixEmail).push().setValue(event);
+        String key = mDatabase.getReference("events/" + fixEmail).push().getKey();
+        Event event = new Event(title, description, c, alertCount, alertKind, repeat, key);
+        mDatabase.getReference("events/" + fixEmail).child(key).setValue(event);
         Intent intent = new Intent(AddItem.this, DetailActivity.class);
         startActivity(intent);
     }

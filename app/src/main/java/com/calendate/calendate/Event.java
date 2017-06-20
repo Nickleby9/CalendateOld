@@ -16,12 +16,13 @@ public class Event {
     int alertCount;
     String alertKind;
     String repeat;
+    String key;
 
     public Event(){
 
     }
 
-    public Event(String title, String description, Calendar c, int alertCount, String alertKind, String repeat) {
+    public Event(String title, String description, Calendar c, int alertCount, String alertKind, String repeat, String key) {
         this.title = title;
         this.description = description;
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
@@ -29,6 +30,7 @@ public class Event {
         this.alertCount = alertCount;
         this.alertKind = alertKind;
         this.repeat = repeat;
+        this.key = key;
     }
 
     public String getTitle() {
@@ -55,6 +57,10 @@ public class Event {
         return repeat;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -77,5 +83,9 @@ public class Event {
 
     public void setRepeat(String repeat) {
         this.repeat = repeat;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

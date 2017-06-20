@@ -3,15 +3,18 @@ package com.calendate.calendate;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -27,6 +30,8 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import static com.calendate.calendate.DetailActivity.context;
+
 public class DetailActivity extends AppCompatActivity {
 
     RecyclerView recycler;
@@ -37,7 +42,6 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -45,7 +49,7 @@ public class DetailActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         recycler = (RecyclerView) findViewById(R.id.recycler);
-        context = this.getApplicationContext();
+        context = DetailActivity.this;
 
         String fixEmail = MyUtils.fixEmail(user.getEmail());
         ItemsAdapter adapter = new ItemsAdapter(mDatabase.getReference("events/" + fixEmail));
@@ -103,13 +107,14 @@ public class DetailActivity extends AppCompatActivity {
         protected void populateViewHolder(ItemsViewHolder viewHolder, Event model, int position) {
             viewHolder.tvTitle.setText(model.getTitle());
             viewHolder.tvDate.setText(model.getC());
+            viewHolder.tvTitle.setHint(model.getKey());
         }
 
-        public static class ItemsViewHolder extends RecyclerView.ViewHolder {
+        public static class ItemsViewHolder extends RecyclerView.ViewHolder implements DialogInterface.OnClickListener {
             TextView tvTitle;
             TextView tvDate;
 
-            public ItemsViewHolder(View itemView) {
+            public ItemsViewHolder(final View itemView) {
                 super(itemView);
                 tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
                 tvDate = (TextView) itemView.findViewById(R.id.tvDate);
@@ -126,34 +131,34 @@ public class DetailActivity extends AppCompatActivity {
                     @Override
                     public boolean onLongClick(View v) {
                         deleteDialog();
-                        return false;
+                        return true;
                     }
                 });
+
             }
-             void deleteDialog(){
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+            void deleteDialog() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Theme_AppCompat_Dialog));
                 builder.setTitle(R.string.delete_event)
                         .setMessage(R.string.confirm_delete)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                String fixEmail = MyUtils.fixEmail(user.getEmail());
-
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                        .setPositiveButton(R.string.yes, this)
+                        .setNegativeButton(R.string.no, this);
                 AlertDialog dialog = builder.show();
+            }
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String fixEmail = MyUtils.fixEmail(user.getEmail());
+                    String key = (String) tvTitle.getHint();
+                    mDatabase.getReference("events/" + fixEmail).child(key).removeValue();
+                    dialog.dismiss();
+                } else {
+                    dialog.dismiss();
+                }
             }
         }
     }
-
-
 }

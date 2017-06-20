@@ -18,12 +18,13 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textColor="#424242"
+        android:textColorHint="@android:color/transparent"
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ivArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,6 +41,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@+id/tvTitle"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
 </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
