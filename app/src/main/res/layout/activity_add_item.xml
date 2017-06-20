@@ -40,6 +40,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="@+id/tvTitle"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
@@ -62,6 +63,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="@+id/tvDescription"
         app:layout_constraintRight_toRightOf="@+id/etTitle"
         app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
@@ -123,6 +125,33 @@
         app:layout_constraintTop_toTopOf="@+id/spnCount" />
 
     <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_item_time"
+        android:textColor="#000"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="@+id/tvAlert"
+        app:layout_constraintTop_toBottomOf="@+id/spnCount" />
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/btnTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/btn_set_time"
+        app:bootstrapBrand="regular"
+        app:bootstrapSize="lg"
+        app:buttonMode="regular"
+        app:layout_constraintLeft_toLeftOf="@+id/tvTime"
+        app:layout_constraintRight_toRightOf="@+id/spnKind"
+        app:layout_constraintTop_toBottomOf="@+id/tvTime"
+        app:roundedCorners="true"
+        app:showOutline="false" />
+
+    <TextView
         android:id="@+id/tvRepeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -130,8 +159,8 @@
         android:text="@string/add_item_repeat"
         android:textColor="#000"
         android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tvAlert"
-        app:layout_constraintTop_toBottomOf="@+id/spnCount" />
+        app:layout_constraintLeft_toLeftOf="@+id/btnTime"
+        app:layout_constraintTop_toBottomOf="@+id/btnTime" />
 
     <Spinner
         android:id="@+id/spnRepeat"
@@ -139,14 +168,14 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@+id/spnCount"
         app:layout_constraintRight_toRightOf="@+id/spnKind"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         app:layout_constraintTop_toBottomOf="@+id/tvRepeat" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnSave"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/add_item_save"
+        android:text="@string/btn_save"
         app:bootstrapSize="lg"
         app:bootstrapBrand="regular"
         app:buttonMode="regular"
@@ -156,7 +185,8 @@
         app:layout_constraintTop_toBottomOf="@+id/spnRepeat"
         app:layout_constraintLeft_toLeftOf="@+id/tvRepeat"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="0dp" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnClear"
@@ -169,7 +199,8 @@
         app:showOutline="false"
         app:roundedCorners="true"
         app:layout_constraintRight_toRightOf="@+id/spnRepeat"
-        app:layout_constraintTop_toTopOf="@+id/btnSave" />
+        app:layout_constraintTop_toTopOf="@+id/btnSave"
+        android:layout_marginTop="1dp" />
 
 </android.support.constraint.ConstraintLayout>
 

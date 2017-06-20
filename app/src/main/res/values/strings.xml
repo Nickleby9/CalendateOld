@@ -11,7 +11,7 @@
     <string name="add_item_pick_a_date">Pick a Date</string>
     <string name="add_item_alert_ahead">Alert ahead:</string>
     <string name="add_item_repeat">Repeat:</string>
-    <string name="add_item_save">Save</string>
+    <string name="btn_save">Save</string>
     <string name="add_item_clear">Clear</string>
     <string-array name="count">
         <item>1</item>
@@ -92,6 +92,10 @@
     <string name="no">No</string>
     <string name="btn_edit">Edit</string>
     <string name="not_in_use">Not in use</string>
+    <string name="btn_set_time">Set time</string>
+    <string name="add_item_time">Alert time:</string>
+    <string name="google_login_msg">Logging in using Google account</string>
+    <string name="permission_not_granted">Permissions has not been granted</string>
 
 
 </resources>

@@ -102,12 +102,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String password = etPassword.getText().toString();
                 if (username.contains("@")) {
                     if (!username.equals("") && !password.equals("")) {
-                        showProgress(true);
+                        showProgress(true, etUsername.getText().toString());
                         mAuth.signInWithEmailAndPassword(username, password)
                                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
-                                        showProgress(false);
+                                        showProgress(false, "");
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         if (user != null) {
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                showProgress(false);
+                                showProgress(false,"");
                                 detailsIncorrect();
                             }
                         });
@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent1);
                 break;
             case R.id.btnGoogle:
-                showProgress(true);
+                showProgress(true, getString(R.string.google_login_msg));
                 Intent googleIntent = Auth.GoogleSignInApi
                         .getSignInIntent(mApiClient);
                 startActivityForResult(googleIntent, RC_GOOGLE_LOGIN);
@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-                                showProgress(false);
+                                showProgress(false, "");
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
@@ -166,13 +166,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        showProgress(false);
-                        Log.d("Ness", e.toString());
+                        showProgress(false, "");
                         Toast.makeText(LoginActivity.this,e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Toast.makeText(this, "Permissions has not been granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.permission_not_granted, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -185,7 +184,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        showProgress(false);
+                        showProgress(false, "");
                     }
                 })
                 .setNegativeButton(R.string.login_error_forgot, new DialogInterface.OnClickListener() {
@@ -210,11 +209,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private ProgressDialog dialog;
 
-    private void showProgress(boolean show) {
+    private void showProgress(boolean show, String msg) {
         if (dialog == null) {
             dialog = new ProgressDialog(this);
             dialog.setTitle(getString(R.string.logging));
-            dialog.setMessage(etUsername.getText());
+            dialog.setMessage(msg);
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
         }

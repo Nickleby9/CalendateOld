@@ -1,9 +1,9 @@
 package com.calendate.calendate;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,11 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,13 +24,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AddItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class AddItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     Spinner spnCount, spnKind, spnRepeat;
     EditText etTitle, etDescription;
-    BootstrapButton btnDate, btnSave, btnClear;
-    Date date;
-    Calendar c;
+    BootstrapButton btnDate, btnSave, btnClear, btnTime;
+    Calendar c = Calendar.getInstance();
+    int hours = 0, minutes = 0;
     FirebaseDatabase mDatabase;
     FirebaseUser user;
 
@@ -49,6 +47,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         spnCount = (Spinner) findViewById(R.id.spnCount);
         spnKind = (Spinner) findViewById(R.id.spnKind);
         spnRepeat = (Spinner) findViewById(R.id.spnRepeat);
+        btnTime = (BootstrapButton) findViewById(R.id.btnTime);
         btnDate = (BootstrapButton) findViewById(R.id.btnDate);
         btnSave = (BootstrapButton) findViewById(R.id.btnSave);
         btnClear = (BootstrapButton) findViewById(R.id.btnClear);
@@ -57,12 +56,13 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         btnDate.setOnClickListener(this);
+        btnTime.setOnClickListener(this);
         btnSave.setOnClickListener(this);
 
-        btnDate.setBootstrapBrand(new CustomBootstrapStyle(this));
-        btnSave.setBootstrapBrand(new CustomBootstrapStyle(this));
-        btnClear.setBootstrapBrand(new CustomBootstrapStyle(this));
-
+        MyUtils.fixBootstrapButton(this, btnDate);
+        MyUtils.fixBootstrapButton(this, btnTime);
+        MyUtils.fixBootstrapButton(this, btnSave);
+        MyUtils.fixBootstrapButton(this, btnClear);
 
         ArrayAdapter<CharSequence> spnCountAdapter = ArrayAdapter.createFromResource(this, R.array.count, R.layout.spinner_item);
         spnCountAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -86,14 +86,12 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         switch (id) {
             case R.id.btnDate:
                 DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext());
-                String btnText = btnDate.getText().toString();
-                if (btnText.equals(getResources().getString(R.string.add_item_pick_a_date))) {
-                    c = Calendar.getInstance();
-                    pickerDialog = new DatePickerDialog(v.getContext(), this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-                } else {
-                    pickerDialog = new DatePickerDialog(v.getContext(), this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-                }
+                pickerDialog = new DatePickerDialog(v.getContext(), this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
                 pickerDialog.show();
+                break;
+            case R.id.btnTime:
+                TimePickerDialog timeDialog = new TimePickerDialog(v.getContext(),R.style.Theme_AppCompat_Dialog, this, hours, minutes, true);
+                timeDialog.show();
                 break;
             case R.id.btnSave:
                 addNewEvent();
@@ -112,11 +110,12 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         String description = etTitle.getText().toString();
         int alertCount = Integer.parseInt(spnCount.getSelectedItem().toString());
         String alertKind = spnKind.getSelectedItem().toString();
+        String time = btnTime.getText().toString();
         String repeat = spnRepeat.getSelectedItem().toString();
 
         String fixEmail = MyUtils.fixEmail(user.getEmail());
         String key = mDatabase.getReference("events/" + fixEmail).push().getKey();
-        Event event = new Event(title, description, c, alertCount, alertKind, repeat, key);
+        Event event = new Event(title, description, c, alertCount, alertKind,time, repeat, key);
         mDatabase.getReference("events/" + fixEmail).child(key).setValue(event);
         Intent intent = new Intent(AddItem.this, DetailActivity.class);
         startActivity(intent);
@@ -130,4 +129,10 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
     }
 
 
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        hours = hourOfDay;
+        minutes = minute;
+        btnTime.setText(String.valueOf(hours) + ":" + String.valueOf(minutes));
+    }
 }

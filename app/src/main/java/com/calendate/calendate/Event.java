@@ -4,9 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by Hilay on 18-יוני-2017.
- */
 
 public class Event {
 
@@ -15,6 +12,7 @@ public class Event {
     String c;
     int alertCount;
     String alertKind;
+    String time;
     String repeat;
     String key;
 
@@ -22,13 +20,14 @@ public class Event {
 
     }
 
-    public Event(String title, String description, Calendar c, int alertCount, String alertKind, String repeat, String key) {
+    public Event(String title, String description, Calendar c, int alertCount, String alertKind, String time, String repeat, String key) {
         this.title = title;
         this.description = description;
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
         this.c  = dateFormat.format(new Date(c.getTimeInMillis()));
         this.alertCount = alertCount;
         this.alertKind = alertKind;
+        this.time = time;
         this.repeat = repeat;
         this.key = key;
     }
@@ -51,6 +50,10 @@ public class Event {
 
     public String getAlertKind() {
         return alertKind;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public String getRepeat() {
@@ -79,6 +82,10 @@ public class Event {
 
     public void setAlertKind(String alertKind) {
         this.alertKind = alertKind;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public void setRepeat(String repeat) {

@@ -9,7 +9,7 @@
     <string name="add_item_event_date">תאריך:</string>
     <string name="add_item_pick_a_date">בחר תאריך</string>
     <string name="add_item_repeat">חזרה:</string>
-    <string name="add_item_save">שמור</string>
+    <string name="btn_save">שמור</string>
     <string name="add_item_title">כותרת:</string>
     <string name="back_twice">לחץ חזרה שנית כדי לצאת</string>
     <string name="btn_login">התחברות</string>
