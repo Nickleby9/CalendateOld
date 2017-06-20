@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,9 +17,14 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.joda.time.LocalDateTime;
 
@@ -105,15 +111,16 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
     private void addNewEvent() {
         String title = etTitle.getText().toString();
-        String description = etTitle.getText().toString();
-        int alertCount = Integer.parseInt(spnCount.getSelectedItem().toString());
-        String alertKind = spnKind.getSelectedItem().toString();
+        final String description = etTitle.getText().toString();
+        int alertCount = spnCount.getSelectedItemPosition();
+        int alertKind = spnKind.getSelectedItemPosition();
         String time = btnTime.getText().toString();
-        String repeat = spnRepeat.getSelectedItem().toString();
+        int repeat = spnRepeat.getSelectedItemPosition();
 
         String key = mDatabase.getReference("events/" + user.getUid()).push().getKey();
-        Event event = new Event(title, description, date, alertCount, alertKind, time, repeat, key);
-        mDatabase.getReference("events/" + user.getUid()).child(key).setValue(event);
+        Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
+        mDatabase.getReference("events/" + user.getUid() + "/" + key).setValue(event);
+
         Intent intent = new Intent(AddItem.this, DetailActivity.class);
         startActivity(intent);
     }

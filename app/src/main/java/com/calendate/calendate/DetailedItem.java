@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -40,7 +41,6 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
     String key;
     int hours = 0, minutes = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +61,23 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
         spnRepeat = (Spinner) findViewById(R.id.spnRepeat);
         btnChange = (BootstrapButton) findViewById(R.id.btnChange);
 
+        key = getIntent().getStringExtra("key");
+
         MyUtils.fixBootstrapButton(this, btnDate);
         MyUtils.fixBootstrapButton(this, btnTime);
         MyUtils.fixBootstrapButton(this, btnChange);
+
+        ArrayAdapter<CharSequence> spnCountAdapter = ArrayAdapter.createFromResource(this, R.array.count, R.layout.spinner_item);
+        spnCountAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spnCount.setAdapter(spnCountAdapter);
+
+        ArrayAdapter<CharSequence> spnKindAdapter = ArrayAdapter.createFromResource(this, R.array.kind, R.layout.spinner_item);
+        spnKindAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spnKind.setAdapter(spnKindAdapter);
+
+        ArrayAdapter<CharSequence> spnRepeatAdapter = ArrayAdapter.createFromResource(this, R.array.repeat, R.layout.spinner_item);
+        spnKindAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spnRepeat.setAdapter(spnRepeatAdapter);
 
         btnDate.setOnClickListener(this);
         btnTime.setOnClickListener(this);
@@ -71,25 +85,32 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
 
         changeEnabled(false);
 
-        key = getIntent().getStringExtra("key");
-
-        mDatabase.getReference("events/" + user.getUid()).child(key);
+        mDatabase.getReference("events/" + user.getUid());
 
         readOnce();
     }
 
     private void readOnce() {
-        mDatabase.getReference("events/" + user.getUid() + "/" + key).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference("events/" + user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Event event = dataSnapshot.getValue(Event.class);
-                etTitle.setText(event.getTitle());
-                etDescription.setText(event.getDescription());
-                btnDate.setText(event.getDate());
-//                    spnCount.(event.getTitle());
-//                    spnKind
-                btnTime.setText(event.getTime());
-//                spnRepeat
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.getKey().equals(key)) {
+                        Event event = snapshot.getValue(Event.class);
+                        etTitle.setText(event.getTitle());
+                        etDescription.setText(event.getDescription());
+                        btnDate.setText(event.getDate());
+                        spnCount.setSelection(event.getAlertCountPos());
+                        spnKind.setSelection(event.getAlertKindPos());
+                        btnTime.setText(event.getTime());
+                        spnRepeat.setSelection(event.getRepeatPos());
+                        key = snapshot.getKey();
+                        date = new LocalDateTime(LocalDateTime.parse(btnDate.getText().toString(), DateTimeFormat.forPattern("MMMM d, yyyy")));
+                        String[] split = btnTime.getText().toString().split(":");
+                        hours = Integer.valueOf(split[0]);
+                        minutes = Integer.valueOf(split[1]);
+                    }
+                }
             }
 
             @Override
@@ -113,17 +134,23 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
                     changeEnabled(false);
                     btnChange.setText(R.string.btn_edit);
 
+                    String title = etTitle.getText().toString();
+                    String description = etTitle.getText().toString();
+                    int alertCount = Integer.parseInt(spnCount.getSelectedItem().toString());
+                    int alertKind = spnKind.getSelectedItemPosition();
+                    int repeat = spnRepeat.getSelectedItemPosition();
+
+                    Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
+                    mDatabase.getReference("events/" + user.getUid() + "/" + key).setValue(event);
+
                     Intent intent = new Intent(DetailedItem.this, DetailActivity.class);
                     startActivity(intent);
                 }
                 break;
             case R.id.btnDate:
                 if (btnDate.isClickable()) {
-
-                    date = new LocalDateTime(LocalDateTime.parse(btnDate.getText().toString(), DateTimeFormat.forPattern("MMMM d, yyyy")));
                     DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext());
                     pickerDialog = new DatePickerDialog(v.getContext(), this, date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
-
                     pickerDialog.show();
                 }
                 break;

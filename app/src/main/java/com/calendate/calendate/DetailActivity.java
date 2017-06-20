@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -55,25 +56,9 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void readOnce() {
-
-        mDatabase.getReference("events/" + user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot row : dataSnapshot.getChildren()) {
-                    row.getValue(String.class);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     static class ItemsAdapter extends FirebaseRecyclerAdapter<Event, ItemsAdapter.ItemsViewHolder> {
         private Context context;
+
         public ItemsAdapter(Context context, Query query) {
             super(Event.class, R.layout.event_item, ItemsViewHolder.class, query);
             this.context = context;
@@ -86,7 +71,7 @@ public class DetailActivity extends AppCompatActivity {
             viewHolder.tvTitle.setHint(model.getKey());
         }
 
-        public static class ItemsViewHolder extends RecyclerView.ViewHolder implements DialogInterface.OnClickListener {
+        public static class ItemsViewHolder extends RecyclerView.ViewHolder {
             TextView tvTitle;
             TextView tvDate;
 
@@ -98,9 +83,8 @@ public class DetailActivity extends AppCompatActivity {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String key = tvTitle.getHint().toString();
                         Intent intent = new Intent(v.getContext(), DetailedItem.class);
-                        intent.putExtra("key", key);
+                        intent.putExtra("key", tvTitle.getHint().toString());
                         v.getContext().startActivity(intent);
                     }
                 });
@@ -108,33 +92,32 @@ public class DetailActivity extends AppCompatActivity {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        deleteDialog();
+                        deleteDialog(v);
                         return true;
                     }
                 });
-
             }
 
-            void deleteDialog() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(itemView.getContext(), R.style.Theme_AppCompat_Dialog));
+            void deleteDialog(final View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
                 builder.setTitle(R.string.delete_event)
                         .setMessage(R.string.confirm_delete)
-                        .setPositiveButton(R.string.yes, this)
-                        .setNegativeButton(R.string.no, this);
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                mDatabase.getReference("events/" + user.getUid() + "/" + tvTitle.getHint()).removeValue();
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
                 AlertDialog dialog = builder.show();
-            }
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    String key = tvTitle.getHint().toString();
-                    mDatabase.getReference("events/" + user.getUid()).child(key).removeValue();
-                    dialog.dismiss();
-                } else {
-                    dialog.dismiss();
-                }
             }
         }
     }

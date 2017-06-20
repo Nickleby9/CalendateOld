@@ -12,27 +12,26 @@ public class Event {
     String title;
     String description;
     String date;
-    int alertCount;
-    String alertKind;
+    int alertCountPos;
+    int alertKindPos;
     String time;
-    String repeat;
+    int repeatPos;
     String key;
 
-    public Event(){
+    public Event() {
 
     }
 
-    public Event(String title, String description, LocalDateTime date, int alertCount, String alertKind, String time, String repeat, String key) {
+    public Event(String title, String description, LocalDateTime date, int alertCountPos, int alertKindPos, int hours, int minutes, int repeatPos, String key) {
         this.title = title;
         this.description = description;
         this.date = date.toString("MMMM d, yyyy");
-        this.alertCount = alertCount;
-        this.alertKind = alertKind;
-        this.time = time;
-        this.repeat = repeat;
+        this.alertCountPos = alertCountPos;
+        this.alertKindPos = alertKindPos;
+        this.time = hours + ":" + minutes;
+        this.repeatPos = repeatPos;
         this.key = key;
     }
-
 
 
     public String getTitle() {
@@ -47,24 +46,9 @@ public class Event {
         return date;
     }
 
-    public int getAlertCount() {
-        return alertCount;
-    }
-
-    public String getAlertKind() {
-        return alertKind;
-    }
 
     public String getTime() {
         return time;
-    }
-
-    public String getRepeat() {
-        return repeat;
-    }
-
-    public String getKey() {
-        return key;
     }
 
     public void setTitle(String title) {
@@ -79,20 +63,37 @@ public class Event {
         this.date = date;
     }
 
-    public void setAlertCount(int alertCount) {
-        this.alertCount = alertCount;
-    }
-
-    public void setAlertKind(String alertKind) {
-        this.alertKind = alertKind;
-    }
 
     public void setTime(String time) {
         this.time = time;
     }
 
-    public void setRepeat(String repeat) {
-        this.repeat = repeat;
+    public int getAlertCountPos() {
+        return alertCountPos;
+    }
+
+    public void setAlertCountPos(int alertCountPos) {
+        this.alertCountPos = alertCountPos;
+    }
+
+    public int getAlertKindPos() {
+        return alertKindPos;
+    }
+
+    public void setAlertKindPos(int alertKindPos) {
+        this.alertKindPos = alertKindPos;
+    }
+
+    public int getRepeatPos() {
+        return repeatPos;
+    }
+
+    public void setRepeatPos(int repeatPos) {
+        this.repeatPos = repeatPos;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public void setKey(String key) {
