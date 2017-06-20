@@ -14,6 +14,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -87,13 +88,16 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                                                         user.reload().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                             @Override
                                                             public void onSuccess(Void aVoid) {
+
+                                                                User newUser = new User(user);
+                                                                mDatabase.getReference("users").child(user.getUid()).setValue(newUser);
+
                                                                 Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
                                                                 startActivity(intent);
                                                             }
                                                         });
                                                     }
                                                 });
-
                                             }
                                         }
                                     });
@@ -110,6 +114,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                                 } catch (FirebaseAuthUserCollisionException e) {
                                     etEmail.setError(getString(R.string.error_user_exists));
                                     etEmail.requestFocus();
+                                } catch (FirebaseNetworkException e){
+                                    tvError.setText(R.string.network_error);
+                                    tvError.setVisibility(View.VISIBLE);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

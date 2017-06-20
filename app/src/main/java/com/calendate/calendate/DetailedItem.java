@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TimePicker;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,19 +22,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class DetailedItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class DetailedItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     Spinner spnCount, spnKind, spnRepeat;
     EditText etTitle, etDescription;
     BootstrapButton btnDate, btnChange, btnTime;
-    Calendar c;
+    LocalDateTime date;
     FirebaseDatabase mDatabase;
     FirebaseUser user;
     String key;
+    int hours = 0, minutes = 0;
 
 
     @Override
@@ -69,21 +73,19 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
 
         key = getIntent().getStringExtra("key");
 
-        String fixEmail = MyUtils.fixEmail(user.getEmail());
-        mDatabase.getReference("events/" + fixEmail).child(key);
+        mDatabase.getReference("events/" + user.getUid()).child(key);
 
         readOnce();
     }
 
     private void readOnce() {
-        String fixEmail = MyUtils.fixEmail(user.getEmail());
-        mDatabase.getReference("events/" + fixEmail + "/" + key).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference("events/" + user.getUid() + "/" + key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event event = dataSnapshot.getValue(Event.class);
                 etTitle.setText(event.getTitle());
                 etDescription.setText(event.getDescription());
-                btnDate.setText(event.getC());
+                btnDate.setText(event.getDate());
 //                    spnCount.(event.getTitle());
 //                    spnKind
                 btnTime.setText(event.getTime());
@@ -117,22 +119,18 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnDate:
                 if (btnDate.isClickable()) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-                    try {
-                        c.setTime(dateFormat.parse(btnDate.getText().toString()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+
+                    date = new LocalDateTime(LocalDateTime.parse(btnDate.getText().toString(), DateTimeFormat.forPattern("MMMM d, yyyy")));
                     DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext());
-                    pickerDialog = new DatePickerDialog(v.getContext(), this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                    pickerDialog = new DatePickerDialog(v.getContext(), this, date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
 
                     pickerDialog.show();
                 }
                 break;
             case R.id.btnTime:
                 if (btnTime.isClickable()) {
-//                TimePickerDialog timeDialog = new TimePickerDialog(v.getContext(), this, hours, minutes, true);
-//                timeDialog.show();
+                    TimePickerDialog timeDialog = new TimePickerDialog(v.getContext(), this, hours, minutes, true);
+                    timeDialog.show();
                 }
                 break;
         }
@@ -150,6 +148,14 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        date = new LocalDateTime(year, month, dayOfMonth, 0, 0);
+        btnDate.setText(date.toString("MMMM d, yyyy"));
+    }
 
+    @Override
+    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+        hours = hourOfDay;
+        minutes = minute;
+        btnTime.setText(String.valueOf(hours) + ":" + String.valueOf(minutes));
     }
 }

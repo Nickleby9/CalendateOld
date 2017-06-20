@@ -82,8 +82,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
 
     private void readButtonTitle() {
 
-        String hex = MyUtils.fixEmail(user.getEmail());
-        mDatabase.getReference("buttons/2/" + hex + "/" + btnTopLeft.getId())
+        mDatabase.getReference("buttons/" + user.getUid() + "/2/" + btnTopLeft.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -95,7 +94,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
 
                     }
                 });
-        mDatabase.getReference("buttons/2/" + hex + "/" + btnTopRight.getId())
+        mDatabase.getReference("buttons/" + user.getUid() + "/2/" + btnTopRight.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -107,7 +106,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
 
                     }
                 });
-        mDatabase.getReference("buttons/2/" + hex + "/" + btnMiddleLeft.getId())
+        mDatabase.getReference("buttons/" + user.getUid() + "/2/" + btnMiddleLeft.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -119,7 +118,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
 
                     }
                 });
-        mDatabase.getReference("buttons/2/" + hex + "/" + btnMiddleRight.getId())
+        mDatabase.getReference("buttons/" + user.getUid() + "/2/" + btnMiddleRight.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -131,7 +130,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
 
                     }
                 });
-        mDatabase.getReference("buttons/2/" + hex + "/" + btnBottomLeft.getId())
+        mDatabase.getReference("buttons/" + user.getUid() + "/2/" + btnBottomLeft.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,7 +142,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
 
                     }
                 });
-        mDatabase.getReference("buttons/2/" + hex + "/" + btnBottomRight.getId())
+        mDatabase.getReference("buttons/" + user.getUid() + "/2/" + btnBottomRight.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -236,10 +235,9 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
     }
 
     public void setButtonText(final Button button, String text) {
-        String hex = MyUtils.fixEmail(user.getEmail());
-        mDatabase.getReference("buttons/2/" + hex + "/" + button.getId()).setValue(text);
+        mDatabase.getReference("buttons/" + user.getUid() + "/2/" + button.getId()).setValue(text);
 
-        final DatabaseReference mRef = mDatabase.getReference("buttons/2/" + hex + "/" + button.getId());
+        final DatabaseReference mRef = mDatabase.getReference("buttons/" + user.getUid() + "/2/" + button.getId());
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

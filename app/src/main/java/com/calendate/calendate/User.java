@@ -9,20 +9,56 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class User {
 
+    String uid;
     String username;
     String email;
+    String profileImage = "http://www.freeiconspng.com/uploads/profile-icon-9.png";
+
     FirebaseDatabase mDatabase;
     FirebaseUser user;
 
     public User() {
     }
 
-    public User(String username, String email) {
+    public User(FirebaseUser user) {
+        this.uid = user.getUid();
+        this.username = user.getDisplayName();
+        this.email = user.getEmail();
+        if (user.getPhotoUrl() != null) {
+            profileImage = user.getPhotoUrl().toString();
+        }
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
         this.username = username;
-        this.email = email;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        if (profileImage != null)
+            this.profileImage = profileImage;
     }
 }

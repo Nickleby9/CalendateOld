@@ -28,7 +28,6 @@ public class DetailActivity extends AppCompatActivity {
     RecyclerView recycler;
     FirebaseDatabase mDatabase;
     FirebaseUser user;
-    static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +39,8 @@ public class DetailActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         recycler = (RecyclerView) findViewById(R.id.recycler);
-        context = DetailActivity.this;
 
-        String fixEmail = MyUtils.fixEmail(user.getEmail());
-        ItemsAdapter adapter = new ItemsAdapter(mDatabase.getReference("events/" + fixEmail));
+        ItemsAdapter adapter = new ItemsAdapter(this, mDatabase.getReference("events/" + user.getUid()));
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
 
@@ -58,21 +55,9 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-//    @Override
-//    public void onDataArrived(ArrayList<EventItem> EventItems, Exception e) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//
-//            }
-//        });
-//    }
-
     private void readOnce() {
 
-        String fixEmail = MyUtils.fixEmail(user.getEmail());
-        mDatabase.getReference("events/" + fixEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference("events/" + user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot row : dataSnapshot.getChildren()) {
@@ -87,17 +72,17 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-
     static class ItemsAdapter extends FirebaseRecyclerAdapter<Event, ItemsAdapter.ItemsViewHolder> {
-
-        public ItemsAdapter(Query query) {
+        private Context context;
+        public ItemsAdapter(Context context, Query query) {
             super(Event.class, R.layout.event_item, ItemsViewHolder.class, query);
+            this.context = context;
         }
 
         @Override
         protected void populateViewHolder(ItemsViewHolder viewHolder, Event model, int position) {
             viewHolder.tvTitle.setText(model.getTitle());
-            viewHolder.tvDate.setText(model.getC());
+            viewHolder.tvDate.setText(model.getDate());
             viewHolder.tvTitle.setHint(model.getKey());
         }
 
@@ -114,9 +99,9 @@ public class DetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         String key = tvTitle.getHint().toString();
-                        Intent intent = new Intent(context.getApplicationContext(), DetailedItem.class);
+                        Intent intent = new Intent(v.getContext(), DetailedItem.class);
                         intent.putExtra("key", key);
-                        context.startActivity(intent);
+                        v.getContext().startActivity(intent);
                     }
                 });
 
@@ -131,7 +116,7 @@ public class DetailActivity extends AppCompatActivity {
             }
 
             void deleteDialog() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Theme_AppCompat_Dialog));
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(itemView.getContext(), R.style.Theme_AppCompat_Dialog));
                 builder.setTitle(R.string.delete_event)
                         .setMessage(R.string.confirm_delete)
                         .setPositiveButton(R.string.yes, this)
@@ -144,9 +129,8 @@ public class DetailActivity extends AppCompatActivity {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
                     FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    String fixEmail = MyUtils.fixEmail(user.getEmail());
                     String key = tvTitle.getHint().toString();
-                    mDatabase.getReference("events/" + fixEmail).child(key).removeValue();
+                    mDatabase.getReference("events/" + user.getUid()).child(key).removeValue();
                     dialog.dismiss();
                 } else {
                     dialog.dismiss();

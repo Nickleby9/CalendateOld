@@ -20,16 +20,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.LocalDateTime;
 
 public class AddItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     Spinner spnCount, spnKind, spnRepeat;
     EditText etTitle, etDescription;
     BootstrapButton btnDate, btnSave, btnClear, btnTime;
-    Calendar c = Calendar.getInstance();
+    LocalDateTime date = new LocalDateTime(LocalDateTime.now());
     int hours = 0, minutes = 0;
     FirebaseDatabase mDatabase;
     FirebaseUser user;
@@ -86,11 +84,11 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         switch (id) {
             case R.id.btnDate:
                 DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext());
-                pickerDialog = new DatePickerDialog(v.getContext(), this, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                pickerDialog = new DatePickerDialog(v.getContext(), this, date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
                 pickerDialog.show();
                 break;
             case R.id.btnTime:
-                TimePickerDialog timeDialog = new TimePickerDialog(v.getContext(),R.style.Theme_AppCompat_Dialog, this, hours, minutes, true);
+                TimePickerDialog timeDialog = new TimePickerDialog(v.getContext(), this, hours, minutes, true);
                 timeDialog.show();
                 break;
             case R.id.btnSave:
@@ -113,21 +111,18 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         String time = btnTime.getText().toString();
         String repeat = spnRepeat.getSelectedItem().toString();
 
-        String fixEmail = MyUtils.fixEmail(user.getEmail());
-        String key = mDatabase.getReference("events/" + fixEmail).push().getKey();
-        Event event = new Event(title, description, c, alertCount, alertKind,time, repeat, key);
-        mDatabase.getReference("events/" + fixEmail).child(key).setValue(event);
+        String key = mDatabase.getReference("events/" + user.getUid()).push().getKey();
+        Event event = new Event(title, description, date, alertCount, alertKind, time, repeat, key);
+        mDatabase.getReference("events/" + user.getUid()).child(key).setValue(event);
         Intent intent = new Intent(AddItem.this, DetailActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-        c.set(year, month, dayOfMonth);
-        btnDate.setText(dateFormat.format(new Date(c.getTimeInMillis())));
+        date = new LocalDateTime(year, month, dayOfMonth, 0, 0);
+        btnDate.setText(date.toString("MMMM d, yyyy"));
     }
-
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

@@ -110,6 +110,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         showProgress(false, "");
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         if (user != null) {
+
+                                            User newUser = new User(user);
+                                            mDatabase.getReference("users").child(user.getUid()).setValue(newUser);
+
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(intent);
@@ -159,6 +163,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             @Override
                             public void onSuccess(AuthResult authResult) {
                                 showProgress(false, "");
+
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                User newUser = new User(user);
+                                mDatabase.getReference("users").child(user.getUid()).setValue(newUser);
+
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);

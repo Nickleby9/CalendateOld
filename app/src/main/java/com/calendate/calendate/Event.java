@@ -1,5 +1,7 @@
 package com.calendate.calendate;
 
+import org.joda.time.LocalDateTime;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +11,7 @@ public class Event {
 
     String title;
     String description;
-    String c;
+    String date;
     int alertCount;
     String alertKind;
     String time;
@@ -20,17 +22,18 @@ public class Event {
 
     }
 
-    public Event(String title, String description, Calendar c, int alertCount, String alertKind, String time, String repeat, String key) {
+    public Event(String title, String description, LocalDateTime date, int alertCount, String alertKind, String time, String repeat, String key) {
         this.title = title;
         this.description = description;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-        this.c  = dateFormat.format(new Date(c.getTimeInMillis()));
+        this.date = date.toString("MMMM d, yyyy");
         this.alertCount = alertCount;
         this.alertKind = alertKind;
         this.time = time;
         this.repeat = repeat;
         this.key = key;
     }
+
+
 
     public String getTitle() {
         return title;
@@ -40,8 +43,8 @@ public class Event {
         return description;
     }
 
-    public String getC() {
-        return c;
+    public String getDate() {
+        return date;
     }
 
     public int getAlertCount() {
@@ -72,8 +75,8 @@ public class Event {
         this.description = description;
     }
 
-    public void setC(String c) {
-        this.c = c;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public void setAlertCount(int alertCount) {
