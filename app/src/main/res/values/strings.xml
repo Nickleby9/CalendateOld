@@ -97,6 +97,7 @@
     <string name="google_login_msg">Logging in using Google account</string>
     <string name="permission_not_granted">Permissions has not been granted</string>
     <string name="network_error">No internet connection</string>
+    <string name="error">Error</string>
 
 
 </resources>

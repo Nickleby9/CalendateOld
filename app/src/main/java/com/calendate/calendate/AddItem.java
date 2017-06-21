@@ -2,10 +2,12 @@ package com.calendate.calendate;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -82,15 +84,12 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    //TODO:fix that ^
     @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
             case R.id.btnDate:
-                DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext());
-                pickerDialog = new DatePickerDialog(v.getContext(), this, date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+                DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext(), this, date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
                 pickerDialog.show();
                 break;
             case R.id.btnTime:
@@ -98,7 +97,19 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
                 timeDialog.show();
                 break;
             case R.id.btnSave:
-                addNewEvent();
+                if (isEmptyFields()){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setTitle(getString(R.string.error));
+                    dialog.setMessage(getString(R.string.error_empty_fields));
+                    dialog.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+                } else {
+                    addNewEvent();
+                }
                 break;
             case R.id.btnClear:
                 etTitle.setText("");
@@ -106,6 +117,22 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
                 btnDate.setText(R.string.add_item_pick_a_date);
 
                 break;
+        }
+    }
+
+    private boolean isEmptyFields() {
+        int alertCount = -1, alertKind = -1, repeat = -1;
+        String title = etTitle.getText().toString();
+        String description = etTitle.getText().toString();
+        alertCount = spnCount.getSelectedItemPosition();
+        alertKind = spnKind.getSelectedItemPosition();
+        String time = btnTime.getText().toString();
+        repeat = spnRepeat.getSelectedItemPosition();
+        if (title.isEmpty() || alertCount == -1 || alertKind == -1 || time.equals(getString(R.string.btn_set_time))
+                || repeat == -1 || btnDate.getText().toString().equals(getString(R.string.add_item_pick_a_date))) {
+            return true;
+        } else {
+            return false;
         }
     }
 

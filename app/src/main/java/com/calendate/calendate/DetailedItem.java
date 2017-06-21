@@ -120,8 +120,6 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    //TODO:fix that^
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -149,8 +147,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnDate:
                 if (btnDate.isClickable()) {
-                    DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext());
-                    pickerDialog = new DatePickerDialog(v.getContext(), this, date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+                    DatePickerDialog pickerDialog = new DatePickerDialog(v.getContext(), this, date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
                     pickerDialog.show();
                 }
                 break;
