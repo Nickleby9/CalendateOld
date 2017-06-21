@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,9 +18,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ButtonsFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
 
@@ -85,7 +81,6 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
     }
 
     private void readButtonTitle() {
-
         mDatabase.getReference("buttons/" + user.getUid() + "/1/" + btnTopLeft.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -170,7 +165,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
 
     public void onButtonPressed(int btnId) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(btnId);
+            mListener.onButtonPressed(btnId, 1);
         }
     }
 
@@ -235,7 +230,7 @@ public class ButtonsFragment extends Fragment implements View.OnClickListener, V
 
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(int btnId);
+        void onButtonPressed(int btnId, int buttonsNumber);
     }
 
     public void setButtonText(final BootstrapButton button, String text) {

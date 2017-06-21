@@ -39,6 +39,8 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
     int hours = 0, minutes = 0;
     FirebaseDatabase mDatabase;
     FirebaseUser user;
+    int btnId;
+    int buttonsNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
+        btnId = getIntent().getIntExtra("btnId", 0);
+        buttonsNumber = getIntent().getIntExtra("btnNum", 0);
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etDescription = (EditText) findViewById(R.id.etDescription);
@@ -138,17 +142,19 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
     private void addNewEvent() {
         String title = etTitle.getText().toString();
-        final String description = etTitle.getText().toString();
+        final String description = etDescription.getText().toString();
         int alertCount = spnCount.getSelectedItemPosition();
         int alertKind = spnKind.getSelectedItemPosition();
         String time = btnTime.getText().toString();
         int repeat = spnRepeat.getSelectedItemPosition();
 
-        String key = mDatabase.getReference("events/" + user.getUid()).push().getKey();
+        String key = mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber).push().getKey();
         Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
-        mDatabase.getReference("events/" + user.getUid() + "/" + key).setValue(event);
+        mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber + "/" + key).setValue(event);
 
         Intent intent = new Intent(AddItem.this, DetailActivity.class);
+        intent.putExtra("btnId", btnId);
+        intent.putExtra("btnNum", buttonsNumber);
         startActivity(intent);
     }
 

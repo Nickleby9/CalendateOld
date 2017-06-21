@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,6 +62,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
         btnBottomLeft.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
         btnBottomRight.setBootstrapBrand(new CustomBootstrapStyle(view.getContext()));
 
+
         btnTopLeft.setOnClickListener(this);
         btnTopRight.setOnClickListener(this);
         btnMiddleLeft.setOnClickListener(this);
@@ -81,7 +81,6 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
     }
 
     private void readButtonTitle() {
-
         mDatabase.getReference("buttons/" + user.getUid() + "/2/" + btnTopLeft.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -156,17 +155,17 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
                 });
     }
 
-    public static ButtonsFragmentTwo newInstance() {
+    public static ButtonsFragment newInstance() {
         Bundle args = new Bundle();
 
-        ButtonsFragmentTwo fragment = new ButtonsFragmentTwo();
+        ButtonsFragment fragment = new ButtonsFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     public void onButtonPressed(int btnId) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(btnId);
+            mListener.onButtonPressed(btnId, 2);
         }
     }
 
@@ -221,7 +220,7 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
                         break;
                     case 2:
                         //Delete - are you sure? -remove title and link to data
-                        setButtonText((Button) v.findViewById(btnId), "");
+                        setButtonText((BootstrapButton) v.findViewById(btnId), "");
                         break;
                 }
             }
@@ -231,10 +230,10 @@ public class ButtonsFragmentTwo extends Fragment implements View.OnClickListener
 
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(int btnId);
+        void onButtonPressed(int btnId, int buttonsNumber);
     }
 
-    public void setButtonText(final Button button, String text) {
+    public void setButtonText(final BootstrapButton button, String text) {
         mDatabase.getReference("buttons/" + user.getUid() + "/2/" + button.getId()).setValue(text);
 
         final DatabaseReference mRef = mDatabase.getReference("buttons/" + user.getUid() + "/2/" + button.getId());

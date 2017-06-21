@@ -29,6 +29,9 @@ public class DetailActivity extends AppCompatActivity {
     RecyclerView recycler;
     FirebaseDatabase mDatabase;
     FirebaseUser user;
+    static int btnId;
+    static int buttonsNumber;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,14 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        btnId = getIntent().getIntExtra("btnId", 0);
+        buttonsNumber = getIntent().getIntExtra("btnNum", 0);
+
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         recycler = (RecyclerView) findViewById(R.id.recycler);
 
-        ItemsAdapter adapter = new ItemsAdapter(this, mDatabase.getReference("events/" + user.getUid()));
+        ItemsAdapter adapter = new ItemsAdapter(this, mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber));
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
 
@@ -50,6 +56,8 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), AddItem.class);
+                intent.putExtra("btnId", btnId);
+                intent.putExtra("btnNum", buttonsNumber);
                 startActivity(intent);
             }
         });
@@ -85,6 +93,8 @@ public class DetailActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(v.getContext(), DetailedItem.class);
                         intent.putExtra("key", tvTitle.getHint().toString());
+                        intent.putExtra("btnId",btnId);
+                        intent.putExtra("btnNum", buttonsNumber);
                         v.getContext().startActivity(intent);
                     }
                 });
@@ -107,7 +117,7 @@ public class DetailActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                mDatabase.getReference("events/" + user.getUid() + "/" + tvTitle.getHint()).removeValue();
+                                mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber + "/" + tvTitle.getHint()).removeValue();
                                 dialogInterface.dismiss();
                             }
                         })

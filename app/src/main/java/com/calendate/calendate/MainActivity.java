@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements ButtonsFragment.OnFragmentInteractionListener,
-        SetButtonTitleDialog.OnTitleSetListener {
+        SetButtonTitleDialog.OnTitleSetListener, ButtonsFragmentTwo.OnFragmentInteractionListener {
 
     private static final String BUTTON_ID = "btnId";
     private static final int RC_FIREBASE_SIGNIN = 2;
@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
     FirebaseAuth mAuth;
     FirebaseUser user;
     String buttonTitle;
+    int currentFragment;
+
     FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -84,14 +86,16 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         mDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tvUser = (TextView) findViewById(R.id.tvUser);
 
-        if (user != null)
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "fragment_TAG").commit();
-
+        if (user != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "frag_button_1").commit();
+            currentFragment = 1;
+//            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragmentTwo(), "frag_button_2").commit();
+//            currentFragment = 2;
+        }
     }
 
     @Override
@@ -119,20 +123,32 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
 
 
     @Override
-    public void onFragmentInteraction(int btnId) {
+    public void onButtonPressed(int btnId, int buttonsNumber) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         intent.putExtra(BUTTON_ID, btnId);
+        intent.putExtra("btnNum", buttonsNumber);
         startActivity(intent);
     }
 
     @Override
     public void onTitleSet(String title, int btnId) {
-        Fragment setTitle = getSupportFragmentManager().findFragmentByTag("fragment_TAG");
-        if (setTitle != null) {
-            ButtonsFragment bf = (ButtonsFragment) setTitle;
-            BootstrapButton button = (BootstrapButton) findViewById(btnId);
-            bf.setButtonText(button, title);
+        if (currentFragment == 1) {
+            Fragment setTitle = getSupportFragmentManager().findFragmentByTag("frag_button_1");
+            if (setTitle != null) {
+                ButtonsFragment bf = (ButtonsFragment) setTitle;
+                BootstrapButton button = (BootstrapButton) findViewById(btnId);
+                bf.setButtonText(button, title);
+            }
         }
+        if (currentFragment == 2) {
+            Fragment setTitle = getSupportFragmentManager().findFragmentByTag("frag_button_2");
+            if (setTitle != null) {
+                ButtonsFragmentTwo bf = (ButtonsFragmentTwo) setTitle;
+                BootstrapButton button = (BootstrapButton) findViewById(btnId);
+                bf.setButtonText(button, title);
+            }
+        }
+
     }
 
 }

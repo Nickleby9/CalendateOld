@@ -40,6 +40,8 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
     FirebaseUser user;
     String key;
     int hours = 0, minutes = 0;
+    int btnId;
+    int buttonsNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
 
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
+        btnId = getIntent().getIntExtra("btnId", 0);
+        buttonsNumber = getIntent().getIntExtra("btnNum", 0);
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etDescription = (EditText) findViewById(R.id.etDescription);
@@ -85,13 +89,13 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
 
         changeEnabled(false);
 
-        mDatabase.getReference("events/" + user.getUid());
+        mDatabase.getReference("events/" + user.getUid() + "/" + btnId);
 
         readOnce();
     }
 
     private void readOnce() {
-        mDatabase.getReference("events/" + user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -133,15 +137,17 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
                     btnChange.setText(R.string.btn_edit);
 
                     String title = etTitle.getText().toString();
-                    String description = etTitle.getText().toString();
+                    String description = etDescription.getText().toString();
                     int alertCount = Integer.parseInt(spnCount.getSelectedItem().toString());
                     int alertKind = spnKind.getSelectedItemPosition();
                     int repeat = spnRepeat.getSelectedItemPosition();
 
                     Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
-                    mDatabase.getReference("events/" + user.getUid() + "/" + key).setValue(event);
+                    mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber + "/" + key).setValue(event);
 
                     Intent intent = new Intent(DetailedItem.this, DetailActivity.class);
+                    intent.putExtra("btnId", btnId);
+                    intent.putExtra("btnNum", buttonsNumber);
                     startActivity(intent);
                 }
                 break;
