@@ -1,19 +1,27 @@
 package com.calendate.calendate;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,22 +30,24 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements ButtonsFragment.OnFragmentInteractionListener,
-        SetButtonTitleDialog.OnTitleSetListener, ButtonsFragmentTwo.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements SetButtonTitleDialog.OnTitleSetListener {
 
-    private static final String BUTTON_ID = "btnId";
     private static final int RC_FIREBASE_SIGNIN = 2;
     TextView tvUser;
     FirebaseDatabase mDatabase;
     FirebaseAuth mAuth;
     FirebaseUser user;
     String buttonTitle;
-    int currentFragment;
+    int fragNum;
 
     FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -78,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         }
     }
 
+    ViewPager viewPager;
+    SectionsPagerAdapter mSectionsPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,10 +102,15 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tvUser = (TextView) findViewById(R.id.tvUser);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mSectionsPagerAdapter);
+        fragNum = getIntent().getIntExtra("fragNum", 0) -1;
+        viewPager.setCurrentItem(fragNum);
 
         if (user != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "frag_button_1").commit();
-            currentFragment = 1;
+//            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "frag_button_1").commit();
+//            currentFragment = 1;
 //            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragmentTwo(), "frag_button_2").commit();
 //            currentFragment = 2;
         }
@@ -123,32 +141,244 @@ public class MainActivity extends AppCompatActivity implements ButtonsFragment.O
 
 
     @Override
-    public void onButtonPressed(int btnId, int buttonsNumber) {
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-        intent.putExtra(BUTTON_ID, btnId);
-        intent.putExtra("btnNum", buttonsNumber);
-        startActivity(intent);
-    }
+    public void onTitleSet(String title, int btnId, int fragNum) {
+        PlaceholderFragment p = new PlaceholderFragment();
+        BootstrapButton b = (BootstrapButton) findViewById(btnId);
+        p.setButtonText(b, title, fragNum);
 
-    @Override
-    public void onTitleSet(String title, int btnId) {
-        if (currentFragment == 1) {
-            Fragment setTitle = getSupportFragmentManager().findFragmentByTag("frag_button_1");
-            if (setTitle != null) {
-                ButtonsFragment bf = (ButtonsFragment) setTitle;
-                BootstrapButton button = (BootstrapButton) findViewById(btnId);
-                bf.setButtonText(button, title);
-            }
-        }
-        if (currentFragment == 2) {
-            Fragment setTitle = getSupportFragmentManager().findFragmentByTag("frag_button_2");
-            if (setTitle != null) {
-                ButtonsFragmentTwo bf = (ButtonsFragmentTwo) setTitle;
-                BootstrapButton button = (BootstrapButton) findViewById(btnId);
-                bf.setButtonText(button, title);
-            }
-        }
 
     }
 
+//    @Override
+//    public void onButtonPressed(int btnId, int fragNum) {
+//
+//    }
+
+
+    public static class PlaceholderFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        int fragNum = 0;
+        BootstrapButton btnTopLeft;
+        BootstrapButton btnTopRight;
+        BootstrapButton btnMiddleLeft;
+        BootstrapButton btnMiddleRight;
+        BootstrapButton btnBottomLeft;
+        BootstrapButton btnBottomRight;
+
+        public PlaceholderFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_buttons, container, false);
+            fragNum = getArguments().getInt(ARG_SECTION_NUMBER);
+
+            btnTopLeft = (BootstrapButton) rootView.findViewById(R.id.btnTopLeft);
+            btnTopRight = (BootstrapButton) rootView.findViewById(R.id.btnTopRight);
+            btnMiddleLeft = (BootstrapButton) rootView.findViewById(R.id.btnMiddleLeft);
+            btnMiddleRight = (BootstrapButton) rootView.findViewById(R.id.btnMiddleRight);
+            btnBottomLeft = (BootstrapButton) rootView.findViewById(R.id.btnBottomLeft);
+            btnBottomRight = (BootstrapButton) rootView.findViewById(R.id.btnBottomRight);
+
+            btnTopLeft.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
+            btnTopRight.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
+            btnMiddleLeft.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
+            btnMiddleRight.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
+            btnBottomLeft.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
+            btnBottomRight.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
+
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnTopLeft.getId())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            btnTopLeft.setText(dataSnapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnTopRight.getId())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            btnTopRight.setText(dataSnapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnMiddleLeft.getId())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            btnMiddleLeft.setText(dataSnapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnMiddleRight.getId())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            btnMiddleRight.setText(dataSnapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnBottomLeft.getId())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            btnBottomLeft.setText(dataSnapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnBottomRight.getId())
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            btnBottomRight.setText(dataSnapshot.getValue(String.class));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+            btnTopLeft.setOnClickListener(this);
+            btnTopRight.setOnClickListener(this);
+            btnMiddleLeft.setOnClickListener(this);
+            btnMiddleRight.setOnClickListener(this);
+            btnBottomLeft.setOnClickListener(this);
+            btnBottomRight.setOnClickListener(this);
+
+            btnTopLeft.setOnLongClickListener(this);
+            btnTopRight.setOnLongClickListener(this);
+            btnMiddleLeft.setOnLongClickListener(this);
+            btnMiddleRight.setOnLongClickListener(this);
+            btnBottomLeft.setOnLongClickListener(this);
+            btnBottomRight.setOnLongClickListener(this);
+            return rootView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            int id = v.getId();
+            onButtonPressed(id, fragNum);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int id = v.getId();
+            showButtonOptionsDialog(v, id, fragNum);
+            return false;
+        }
+
+        public void showButtonOptionsDialog(final View v, final int btnId, final int fragNum) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle(R.string.change_button_dialog_title);
+            builder.setItems(R.array.buttonOptions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0:
+                            //Change title
+                            SetButtonTitleDialog f = new SetButtonTitleDialog();
+                            Bundle args = new Bundle();
+                            args.putInt("btnId", btnId);
+                            args.putInt("fragNum", fragNum);
+                            f.setArguments(args);
+                            f.show(getFragmentManager(), "setButtonTitleDialog");
+                            break;
+                        case 1:
+                            //Change image
+
+                            break;
+                        case 2:
+                            //Delete - are you sure? -remove title and link to data
+                            setButtonText((BootstrapButton) v.findViewById(btnId), "", fragNum);
+                            break;
+                    }
+                }
+            });
+            builder.show();
+        }
+
+        public void setButtonText(final BootstrapButton button, String text, int fragNum) {
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + button.getId()).setValue(text);
+        }
+
+        public void onButtonPressed(int btnId, int fragNum) {
+            Intent intent = new Intent(getContext(), DetailActivity.class);
+            intent.putExtra("btnId", btnId);
+            intent.putExtra("fragNum", fragNum);
+            startActivity(intent);
+        }
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            // Show 2 total pages.
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "1";
+                case 1:
+                    return "2";
+            }
+            return null;
+        }
+    }
 }

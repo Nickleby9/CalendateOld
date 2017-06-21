@@ -3,8 +3,6 @@ package com.calendate.calendate;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,10 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class DetailedItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -41,7 +35,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
     String key;
     int hours = 0, minutes = 0;
     int btnId;
-    int buttonsNumber;
+    int fragNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +48,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         btnId = getIntent().getIntExtra("btnId", 0);
-        buttonsNumber = getIntent().getIntExtra("btnNum", 0);
+        fragNum = getIntent().getIntExtra("fragNum", 0);
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etDescription = (EditText) findViewById(R.id.etDescription);
@@ -95,7 +89,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
     }
 
     private void readOnce() {
-        mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference("events/" + user.getUid() + "/" + btnId + fragNum).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -143,11 +137,11 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
                     int repeat = spnRepeat.getSelectedItemPosition();
 
                     Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
-                    mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber + "/" + key).setValue(event);
+                    mDatabase.getReference("events/" + user.getUid() + "/" + btnId + fragNum + "/" + key).setValue(event);
 
                     Intent intent = new Intent(DetailedItem.this, DetailActivity.class);
                     intent.putExtra("btnId", btnId);
-                    intent.putExtra("btnNum", buttonsNumber);
+                    intent.putExtra("fragNum", fragNum);
                     startActivity(intent);
                 }
                 break;

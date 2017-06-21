@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,12 +16,8 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -30,8 +25,15 @@ public class DetailActivity extends AppCompatActivity {
     FirebaseDatabase mDatabase;
     FirebaseUser user;
     static int btnId;
-    static int buttonsNumber;
+    static int fragNum;
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("fragNum", fragNum);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +43,13 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         btnId = getIntent().getIntExtra("btnId", 0);
-        buttonsNumber = getIntent().getIntExtra("btnNum", 0);
+        fragNum = getIntent().getIntExtra("fragNum", 0);
 
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         recycler = (RecyclerView) findViewById(R.id.recycler);
 
-        ItemsAdapter adapter = new ItemsAdapter(this, mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber));
+        ItemsAdapter adapter = new ItemsAdapter(this, mDatabase.getReference("events/" + user.getUid() + "/" + btnId + fragNum));
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
 
@@ -57,7 +59,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), AddItem.class);
                 intent.putExtra("btnId", btnId);
-                intent.putExtra("btnNum", buttonsNumber);
+                intent.putExtra("fragNum", fragNum);
                 startActivity(intent);
             }
         });
@@ -94,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
                         Intent intent = new Intent(v.getContext(), DetailedItem.class);
                         intent.putExtra("key", tvTitle.getHint().toString());
                         intent.putExtra("btnId",btnId);
-                        intent.putExtra("btnNum", buttonsNumber);
+                        intent.putExtra("fragNum", fragNum);
                         v.getContext().startActivity(intent);
                     }
                 });
@@ -117,7 +119,7 @@ public class DetailActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber + "/" + tvTitle.getHint()).removeValue();
+                                mDatabase.getReference("events/" + user.getUid() + "/" + btnId + fragNum + "/" + tvTitle.getHint()).removeValue();
                                 dialogInterface.dismiss();
                             }
                         })

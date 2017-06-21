@@ -23,12 +23,12 @@ import java.util.Set;
  */
 public class SetButtonTitleDialog extends DialogFragment implements TextWatcher {
 
-    private static String BUTTON_ID = "button_id";
     private int btnId;
     private OnTitleSetListener mListener;
     Button btnSet;
     EditText etTitle;
     TextView tvWarning;
+    int fragNum;
 
     public SetButtonTitleDialog() {
         // Required empty public constructor
@@ -51,13 +51,14 @@ public class SetButtonTitleDialog extends DialogFragment implements TextWatcher 
         etTitle = (EditText) view.findViewById(R.id.etTitle);
         etTitle.addTextChangedListener(this);
 
-        btnId = getArguments().getInt(BUTTON_ID);
+        btnId = getArguments().getInt("btnId");
+        fragNum = getArguments().getInt("fragNum");
 
         btnSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String s = etTitle.getText().toString();
-                mListener.onTitleSet(s, btnId);
+                mListener.onTitleSet(s, btnId, fragNum);
                 dismiss();
             }
         });
@@ -104,6 +105,6 @@ public class SetButtonTitleDialog extends DialogFragment implements TextWatcher 
 
 
     public interface OnTitleSetListener {
-        void onTitleSet(String title, int btnId);
+        void onTitleSet(String title, int btnId, int fragNum);
     }
 }
