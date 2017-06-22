@@ -7,20 +7,20 @@ import android.support.annotation.ColorInt;
 import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
 
 
-
-public class CustomBootstrapStyle implements BootstrapBrand {
+public class CustomBootstrapStyleTransparent implements BootstrapBrand {
 
     @ColorInt private final int defaultFill;
     @ColorInt private final int defaultTextColor;
     @ColorInt private final int activeFill;
     @ColorInt private final int edge;
 
-    @SuppressWarnings("deprecation") public CustomBootstrapStyle(Context context) {
-        defaultFill = Color.parseColor("#039be5");
-        defaultTextColor = Color.WHITE;
-        activeFill = Color.parseColor("#0288d1");
+    @SuppressWarnings("deprecation") public CustomBootstrapStyleTransparent(Context context) {
+        defaultFill = Color.TRANSPARENT;
+        defaultTextColor = Color.parseColor("#0288d1");
+        activeFill = Color.TRANSPARENT;
         edge = 0;
     }
+
 
     @Override
     public int defaultFill(Context context) {
@@ -49,7 +49,7 @@ public class CustomBootstrapStyle implements BootstrapBrand {
 
     @Override
     public int activeTextColor(Context context) {
-        return defaultTextColor;
+        return Color.WHITE;
     }
 
     @Override

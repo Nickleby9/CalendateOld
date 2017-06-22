@@ -5,12 +5,12 @@
     <string name="add_item_alert_ahead">זמן התראה מראש:</string>
     <string name="add_item_clear">נקה</string>
     <string name="add_item_create_a_new_event">אירוע חדש</string>
-    <string name="add_item_description">תיאור:</string>
+    <string name="add_item_title">כותרת</string>
+    <string name="add_item_description">תיאור</string>
     <string name="add_item_event_date">תאריך:</string>
     <string name="add_item_pick_a_date">בחר תאריך</string>
     <string name="add_item_repeat">חזרה:</string>
     <string name="btn_save">שמור</string>
-    <string name="add_item_title">כותרת:</string>
     <string name="back_twice">לחץ חזרה שנית כדי לצאת</string>
     <string name="btn_login">התחברות</string>
     <string name="btn_register">הרשמה</string>

@@ -5,8 +5,8 @@
 
     <!--Create a new event-->
     <string name="add_item_create_a_new_event">Create a new event</string>
-    <string name="add_item_title">Title:</string>
-    <string name="add_item_description">Description:</string>
+    <string name="add_item_title">Title</string>
+    <string name="add_item_description">Description</string>
     <string name="add_item_event_date">Event date:</string>
     <string name="add_item_pick_a_date">Pick a Date</string>
     <string name="add_item_alert_ahead">Alert ahead:</string>
@@ -25,12 +25,14 @@
         <item>9</item>
     </string-array>
     <string-array name="kind">
+        <item>Minutes</item>
+        <item>Hours</item>
         <item>Days</item>
         <item>Weeks</item>
         <item>Months</item>
-        <item>Years</item>
     </string-array>
     <string-array name="repeat">
+        <item>None</item>
         <item>Every day</item>
         <item>Every week</item>
         <item>Every month</item>

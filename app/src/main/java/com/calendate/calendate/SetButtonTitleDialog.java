@@ -11,9 +11,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.beardedhen.androidbootstrap.BootstrapButton;
 
 import java.util.Set;
 
@@ -25,7 +28,7 @@ public class SetButtonTitleDialog extends DialogFragment implements TextWatcher 
 
     private int btnId;
     private OnTitleSetListener mListener;
-    Button btnSet;
+    BootstrapButton btnSet;
     EditText etTitle;
     TextView tvWarning;
     int fragNum;
@@ -47,9 +50,11 @@ public class SetButtonTitleDialog extends DialogFragment implements TextWatcher 
         super.onViewCreated(view, savedInstanceState);
 
         tvWarning = (TextView) view.findViewById(R.id.tvWarning);
-        btnSet = (Button) view.findViewById(R.id.btnSet);
+        btnSet = (BootstrapButton) view.findViewById(R.id.btnSet);
         etTitle = (EditText) view.findViewById(R.id.etTitle);
         etTitle.addTextChangedListener(this);
+        MyUtils.fixBootstrapButton(view.getContext(), btnSet);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         btnId = getArguments().getInt("btnId");
         fragNum = getArguments().getInt("fragNum");

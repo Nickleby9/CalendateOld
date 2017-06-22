@@ -1,5 +1,6 @@
 package com.calendate.calendate;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,10 +23,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
+import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.Scopes;
 import com.google.firebase.auth.FirebaseAuth;
@@ -145,8 +149,6 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
         PlaceholderFragment p = new PlaceholderFragment();
         BootstrapButton b = (BootstrapButton) findViewById(btnId);
         p.setButtonText(b, title, fragNum);
-
-
     }
 
 //    @Override
@@ -200,12 +202,12 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
             btnBottomLeft = (BootstrapButton) rootView.findViewById(R.id.btnBottomLeft);
             btnBottomRight = (BootstrapButton) rootView.findViewById(R.id.btnBottomRight);
 
-            btnTopLeft.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
-            btnTopRight.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
-            btnMiddleLeft.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
-            btnMiddleRight.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
-            btnBottomLeft.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
-            btnBottomRight.setBootstrapBrand(new CustomBootstrapStyle(rootView.getContext()));
+            btnTopLeft.setBootstrapBrand(new CustomBootstrapStyleTransparent(rootView.getContext()));
+            btnTopRight.setBootstrapBrand(new CustomBootstrapStyleTransparent(rootView.getContext()));
+            btnMiddleLeft.setBootstrapBrand(new CustomBootstrapStyleTransparent(rootView.getContext()));
+            btnMiddleRight.setBootstrapBrand(new CustomBootstrapStyleTransparent(rootView.getContext()));
+            btnBottomLeft.setBootstrapBrand(new CustomBootstrapStyleTransparent(rootView.getContext()));
+            btnBottomRight.setBootstrapBrand(new CustomBootstrapStyleTransparent(rootView.getContext()));
 
             mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnTopLeft.getId())
                     .addValueEventListener(new ValueEventListener() {

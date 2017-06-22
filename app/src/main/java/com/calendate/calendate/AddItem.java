@@ -32,8 +32,8 @@ import org.joda.time.LocalDateTime;
 
 public class AddItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    Spinner spnCount, spnKind, spnRepeat;
-    EditText etTitle, etDescription;
+    Spinner spnKind, spnRepeat;
+    EditText etTitle, etDescription, etCount;
     BootstrapButton btnDate, btnSave, btnClear, btnTime;
     LocalDateTime date = new LocalDateTime(LocalDateTime.now());
     int hours = 0, minutes = 0;
@@ -54,7 +54,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etDescription = (EditText) findViewById(R.id.etDescription);
-        spnCount = (Spinner) findViewById(R.id.spnCount);
+        etCount = (EditText) findViewById(R.id.etCount);
         spnKind = (Spinner) findViewById(R.id.spnKind);
         spnRepeat = (Spinner) findViewById(R.id.spnRepeat);
         btnTime = (BootstrapButton) findViewById(R.id.btnTime);
@@ -73,10 +73,6 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         MyUtils.fixBootstrapButton(this, btnTime);
         MyUtils.fixBootstrapButton(this, btnSave);
         MyUtils.fixBootstrapButton(this, btnClear);
-
-        ArrayAdapter<CharSequence> spnCountAdapter = ArrayAdapter.createFromResource(this, R.array.count, R.layout.spinner_item);
-        spnCountAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spnCount.setAdapter(spnCountAdapter);
 
         ArrayAdapter<CharSequence> spnKindAdapter = ArrayAdapter.createFromResource(this, R.array.kind, R.layout.spinner_item);
         spnKindAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -128,7 +124,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         int alertCount = -1, alertKind = -1, repeat = -1;
         String title = etTitle.getText().toString();
         String description = etTitle.getText().toString();
-        alertCount = spnCount.getSelectedItemPosition();
+        alertCount = Integer.valueOf(etCount.getText().toString());
         alertKind = spnKind.getSelectedItemPosition();
         String time = btnTime.getText().toString();
         repeat = spnRepeat.getSelectedItemPosition();
@@ -143,7 +139,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
     private void addNewEvent() {
         String title = etTitle.getText().toString();
         final String description = etDescription.getText().toString();
-        int alertCount = spnCount.getSelectedItemPosition();
+        int alertCount = Integer.valueOf(etCount.getText().toString());
         int alertKind = spnKind.getSelectedItemPosition();
         String time = btnTime.getText().toString();
         int repeat = spnRepeat.getSelectedItemPosition();
