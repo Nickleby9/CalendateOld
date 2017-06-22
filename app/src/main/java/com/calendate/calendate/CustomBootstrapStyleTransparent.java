@@ -17,7 +17,7 @@ public class CustomBootstrapStyleTransparent implements BootstrapBrand {
     @SuppressWarnings("deprecation") public CustomBootstrapStyleTransparent(Context context) {
         defaultFill = Color.TRANSPARENT;
         defaultTextColor = Color.parseColor("#0288d1");
-        activeFill = Color.TRANSPARENT;
+        activeFill = Color.parseColor("#f5f5f5");
         edge = 0;
     }
 
@@ -49,7 +49,7 @@ public class CustomBootstrapStyleTransparent implements BootstrapBrand {
 
     @Override
     public int activeTextColor(Context context) {
-        return Color.WHITE;
+        return defaultTextColor;
     }
 
     @Override
