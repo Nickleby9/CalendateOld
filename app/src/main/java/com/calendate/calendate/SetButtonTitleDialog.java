@@ -67,7 +67,6 @@ public class SetButtonTitleDialog extends DialogFragment implements TextWatcher 
                 dismiss();
             }
         });
-
     }
 
     @Override

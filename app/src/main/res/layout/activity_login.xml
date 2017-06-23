@@ -127,7 +127,7 @@
         app:layout_constraintTop_toBottomOf="@+id/idOr" />
 
     <Button
-        android:id="@+id/facebook_button"
+        android:id="@+id/btnFacebook"
         style="@style/FirebaseUI.Button.AccountChooser.FacebookButton"
         android:layout_width="0dp"
         android:layout_marginTop="16dp"

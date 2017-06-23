@@ -144,6 +144,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         .getSignInIntent(mApiClient);
                 startActivityForResult(googleIntent, RC_GOOGLE_LOGIN);
                 break;
+            case R.id.btnFacebook:
+//                showProgress(true, getString(R.string.facebook_login_msg));
+
+                break;
         }
     }
 

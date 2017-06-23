@@ -1,5 +1,6 @@
 package com.calendate.calendate;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -283,6 +284,13 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
                         }
                     });
 
+            //TODO:add progress dialog to load buttons
+//            showProgress(true, getString(R.string.loading));
+//            while (){
+//                showProgress(false, "");
+//
+//            }
+
             btnTopLeft.setOnClickListener(this);
             btnTopRight.setOnClickListener(this);
             btnMiddleLeft.setOnClickListener(this);
@@ -296,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
             btnMiddleRight.setOnLongClickListener(this);
             btnBottomLeft.setOnLongClickListener(this);
             btnBottomRight.setOnLongClickListener(this);
+
             return rootView;
         }
 
@@ -393,6 +402,22 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
             intent.putExtra("fragNum", fragNum);
             startActivity(intent);
         }
+
+        private ProgressDialog dialog;
+
+        private void showProgress(boolean show, String msg) {
+            if (dialog == null) {
+                dialog = new ProgressDialog(getContext());
+                dialog.setMessage(msg);
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+            }
+            if (show)
+                dialog.show();
+            else
+                dialog.dismiss();
+        }
+
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
