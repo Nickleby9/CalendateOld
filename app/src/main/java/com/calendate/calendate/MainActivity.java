@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
     String buttonTitle;
     int fragNum;
 
+
     FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -109,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mSectionsPagerAdapter);
-        fragNum = getIntent().getIntExtra("fragNum", 0) -1;
-        viewPager.setCurrentItem(fragNum);
+        int fragNumToGo = getIntent().getIntExtra("fragNum", 0) -1;
+        viewPager.setCurrentItem(fragNumToGo);
 
         if (user != null) {
 //            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ButtonsFragment(), "frag_button_1").commit();
@@ -145,10 +146,9 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
 
 
     @Override
-    public void onTitleSet(String title, int btnId, int fragNum) {
+    public void onTitleSet(String title, String btnRef, int fragNum) {
         PlaceholderFragment p = new PlaceholderFragment();
-        BootstrapButton b = (BootstrapButton) findViewById(btnId);
-        p.setButtonText(b, title, fragNum);
+        p.setButtonText(btnRef, title, fragNum);
     }
 
 //    @Override
@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
         BootstrapButton btnMiddleRight;
         BootstrapButton btnBottomLeft;
         BootstrapButton btnBottomRight;
+        String btnRef = "";
 
         public PlaceholderFragment() {
         }
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
             btnBottomLeft.setBootstrapBrand(new CustomBootstrapStyleTransparent(rootView.getContext()));
             btnBottomRight.setBootstrapBrand(new CustomBootstrapStyleTransparent(rootView.getContext()));
 
-            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnTopLeft.getId())
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + "topLeft")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
 
                         }
                     });
-            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnTopRight.getId())
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + "topRight")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -233,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
 
                         }
                     });
-            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnMiddleLeft.getId())
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + "middleLeft")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -245,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
 
                         }
                     });
-            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnMiddleRight.getId())
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + "middleRight")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -257,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
 
                         }
                     });
-            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnBottomLeft.getId())
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + "bottomLeft")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -269,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
 
                         }
                     });
-            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnBottomRight.getId())
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + "bottomRight")
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -301,17 +302,57 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
         @Override
         public void onClick(View v) {
             int id = v.getId();
-            onButtonPressed(id, fragNum);
+            switch (id){
+                case R.id.btnTopLeft:
+                    btnRef = "topLeft";
+                    break;
+                case R.id.btnTopRight:
+                    btnRef = "topRight";
+                    break;
+                case R.id.btnMiddleLeft:
+                    btnRef = "middleLeft";
+                    break;
+                case R.id.btnMiddleRight:
+                    btnRef = "middleRight";
+                    break;
+                case R.id.btnBottomLeft:
+                    btnRef = "bottomLeft";
+                    break;
+                case R.id.btnBottomRight:
+                    btnRef = "bottomRight";
+                    break;
+            }
+            onButtonPressed(btnRef, fragNum);
         }
 
         @Override
         public boolean onLongClick(View v) {
             int id = v.getId();
-            showButtonOptionsDialog(v, id, fragNum);
+            switch (id){
+                case R.id.btnTopLeft:
+                    btnRef = "topLeft";
+                    break;
+                case R.id.btnTopRight:
+                    btnRef = "topRight";
+                    break;
+                case R.id.btnMiddleLeft:
+                    btnRef = "middleLeft";
+                    break;
+                case R.id.btnMiddleRight:
+                    btnRef = "middleRight";
+                    break;
+                case R.id.btnBottomLeft:
+                    btnRef = "bottomLeft";
+                    break;
+                case R.id.btnBottomRight:
+                    btnRef = "bottomRight";
+                    break;
+            }
+            showButtonOptionsDialog(v, btnRef, fragNum);
             return false;
         }
 
-        public void showButtonOptionsDialog(final View v, final int btnId, final int fragNum) {
+        public void showButtonOptionsDialog(final View v, final String btnRef, final int fragNum) {
             AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
             builder.setTitle(R.string.change_button_dialog_title);
             builder.setItems(R.array.buttonOptions, new DialogInterface.OnClickListener() {
@@ -322,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
                             //Change title
                             SetButtonTitleDialog f = new SetButtonTitleDialog();
                             Bundle args = new Bundle();
-                            args.putInt("btnId", btnId);
+                            args.putString("btnRef", btnRef);
                             args.putInt("fragNum", fragNum);
                             f.setArguments(args);
                             f.show(getFragmentManager(), "setButtonTitleDialog");
@@ -333,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
                             break;
                         case 2:
                             //Delete - are you sure? -remove title and link to data
-                            setButtonText((BootstrapButton) v.findViewById(btnId), "", fragNum);
+                            setButtonText(btnRef, "", fragNum);
                             break;
                     }
                 }
@@ -341,13 +382,14 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
             builder.show();
         }
 
-        public void setButtonText(final BootstrapButton button, String text, int fragNum) {
-            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + button.getId()).setValue(text);
+        public void setButtonText(String btnRef, String text, int fragNum) {
+            mDatabase.getReference("buttons/" + user.getUid() + "/" + fragNum + "/" + btnRef).setValue(text);
         }
 
-        public void onButtonPressed(int btnId, int fragNum) {
+        public void onButtonPressed(String btnRef, int fragNum) {
+
             Intent intent = new Intent(getContext(), DetailActivity.class);
-            intent.putExtra("btnId", btnId);
+            intent.putExtra("btnRef", btnRef);
             intent.putExtra("fragNum", fragNum);
             startActivity(intent);
         }

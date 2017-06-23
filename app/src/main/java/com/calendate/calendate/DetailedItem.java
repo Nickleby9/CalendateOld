@@ -34,7 +34,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
     FirebaseUser user;
     String key;
     int hours = 0, minutes = 0;
-    int btnId;
+    String btnRef;
     int fragNum;
 
     @Override
@@ -47,7 +47,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
 
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        btnId = getIntent().getIntExtra("btnId", 0);
+        btnRef = getIntent().getStringExtra("btnRef");
         fragNum = getIntent().getIntExtra("fragNum", 0);
 
         etTitle = (EditText) findViewById(R.id.etTitle);
@@ -83,13 +83,13 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
 
         changeEnabled(false);
 
-        mDatabase.getReference("events/" + user.getUid() + "/" + btnId);
+        mDatabase.getReference("events/" + user.getUid() + "/" + btnRef);
 
         readOnce();
     }
 
     private void readOnce() {
-        mDatabase.getReference("events/" + user.getUid() + "/" + btnId + fragNum).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + fragNum).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -137,10 +137,10 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
                     int repeat = spnRepeat.getSelectedItemPosition();
 
                     Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
-                    mDatabase.getReference("events/" + user.getUid() + "/" + btnId + fragNum + "/" + key).setValue(event);
+                    mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + fragNum + "/" + key).setValue(event);
 
                     Intent intent = new Intent(DetailedItem.this, DetailActivity.class);
-                    intent.putExtra("btnId", btnId);
+                    intent.putExtra("btnRef", btnRef);
                     intent.putExtra("fragNum", fragNum);
                     startActivity(intent);
                 }

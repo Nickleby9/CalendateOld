@@ -39,7 +39,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
     int hours = 0, minutes = 0;
     FirebaseDatabase mDatabase;
     FirebaseUser user;
-    int btnId;
+    String btnRef;
     int buttonsNumber;
 
     @Override
@@ -49,8 +49,8 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        btnId = getIntent().getIntExtra("btnId", 0);
-        buttonsNumber = getIntent().getIntExtra("btnNum", 0);
+        btnRef = getIntent().getStringExtra("btnRef");
+        buttonsNumber = getIntent().getIntExtra("fragNum", 0);
 
         etTitle = (EditText) findViewById(R.id.etTitle);
         etDescription = (EditText) findViewById(R.id.etDescription);
@@ -144,13 +144,13 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         String time = btnTime.getText().toString();
         int repeat = spnRepeat.getSelectedItemPosition();
 
-        String key = mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber).push().getKey();
+        String key = mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + buttonsNumber).push().getKey();
         Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
-        mDatabase.getReference("events/" + user.getUid() + "/" + btnId + buttonsNumber + "/" + key).setValue(event);
+        mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + buttonsNumber + "/" + key).setValue(event);
 
         Intent intent = new Intent(AddItem.this, DetailActivity.class);
-        intent.putExtra("btnId", btnId);
-        intent.putExtra("btnNum", buttonsNumber);
+        intent.putExtra("btnRef", btnRef);
+        intent.putExtra("fragNum", buttonsNumber);
         startActivity(intent);
     }
 
