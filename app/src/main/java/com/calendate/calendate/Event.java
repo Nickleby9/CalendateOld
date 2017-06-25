@@ -12,7 +12,7 @@ public class Event {
     String title;
     String description;
     String date;
-    int alertCountPos;
+    int alertCount;
     int alertKindPos;
     String time;
     int repeatPos;
@@ -22,11 +22,11 @@ public class Event {
 
     }
 
-    public Event(String title, String description, LocalDateTime date, int alertCountPos, int alertKindPos, int hours, int minutes, int repeatPos, String key) {
+    public Event(String title, String description, LocalDateTime date, int alertCount, int alertKindPos, int hours, int minutes, int repeatPos, String key) {
         this.title = title;
         this.description = description;
         this.date = date.toString("MMMM d, yyyy");
-        this.alertCountPos = alertCountPos;
+        this.alertCount = alertCount;
         this.alertKindPos = alertKindPos;
         this.time = hours + ":" + minutes;
         this.repeatPos = repeatPos;
@@ -68,12 +68,12 @@ public class Event {
         this.time = time;
     }
 
-    public int getAlertCountPos() {
-        return alertCountPos;
+    public int getAlertCount() {
+        return alertCount;
     }
 
-    public void setAlertCountPos(int alertCountPos) {
-        this.alertCountPos = alertCountPos;
+    public void setAlertCount(int alertCount) {
+        this.alertCount = alertCount;
     }
 
     public int getAlertKindPos() {

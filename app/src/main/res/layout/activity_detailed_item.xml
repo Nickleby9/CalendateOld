@@ -6,177 +6,141 @@
     android:layout_height="match_parent"
     tools:context="com.calendate.calendate.AddItem" >
 
-<android.support.constraint.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp" >
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp" >
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_item_title"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/add_item_title"
+            android:inputType="textPersonName"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp" />
 
-    <EditText
-        android:id="@+id/etTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tvTitle"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        <EditText
+            android:id="@+id/etDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:ems="10"
+            android:hint="@string/add_item_description"
+            android:inputType="textPersonName"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/etTitle"
+            app:layout_constraintRight_toRightOf="@+id/etTitle"
+            app:layout_constraintTop_toBottomOf="@+id/etTitle" />
 
-    <TextView
-        android:id="@+id/tvDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_item_description"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tvTitle"
-        app:layout_constraintTop_toBottomOf="@+id/etTitle" />
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/btnDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/add_item_pick_a_date"
+            app:bootstrapBrand="regular"
+            app:bootstrapSize="lg"
+            app:buttonMode="regular"
+            app:roundedCorners="true"
+            app:showOutline="false"
+            app:layout_constraintTop_toBottomOf="@+id/etDescription"
+            android:layout_marginTop="3dp"
+            app:layout_constraintLeft_toLeftOf="@id/etDescription"
+            app:layout_constraintRight_toLeftOf="@+id/btnTime"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:layout_marginRight="8dp"/>
 
-    <EditText
-        android:id="@+id/etDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tvDescription"
-        app:layout_constraintRight_toRightOf="@+id/etTitle"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/btnTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_set_time"
+            app:bootstrapBrand="regular"
+            app:bootstrapSize="lg"
+            app:buttonMode="regular"
+            app:roundedCorners="true"
+            app:showOutline="false"
+            app:layout_constraintTop_toTopOf="@+id/btnDate"
+            app:layout_constraintRight_toRightOf="@id/etDescription" />
 
-    <TextView
-        android:id="@+id/tvDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_item_event_date"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tvDescription"
-        app:layout_constraintTop_toBottomOf="@+id/etDescription" />
+        <TextView
+            android:id="@+id/tvAlert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/add_item_alert_ahead"
+            android:textColor="#000"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/btnDate"
+            app:layout_goneMarginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="@+id/btnDate" />
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/btnDate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_item_pick_a_date"
-        app:bootstrapBrand="regular"
-        app:bootstrapSize="lg"
-        app:buttonMode="regular"
-        app:layout_constraintLeft_toLeftOf="@+id/etDescription"
-        app:layout_constraintRight_toRightOf="@+id/etDescription"
-        app:layout_constraintTop_toBottomOf="@+id/tvDate"
-        app:roundedCorners="true"
-        app:showOutline="false" />
+        <EditText
+            android:id="@+id/etCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toLeftOf="@+id/tvAlert"
+            app:layout_constraintRight_toLeftOf="@+id/spnKind"
+            app:layout_constraintTop_toBottomOf="@+id/tvAlert" />
 
-    <TextView
-        android:id="@+id/tvAlert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_item_alert_ahead"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tvDate"
-        app:layout_constraintTop_toBottomOf="@+id/btnDate" />
+        <Spinner
+            android:id="@+id/spnKind"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintLeft_toRightOf="@+id/etCount"
+            app:layout_constraintTop_toTopOf="@+id/etCount"
+            app:layout_constraintRight_toRightOf="@+id/btnTime"
+            app:layout_constraintBottom_toBottomOf="@+id/etCount" />
 
-    <Spinner
-        android:id="@+id/spnCount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toLeftOf="@+id/tvAlert"
-        app:layout_constraintRight_toLeftOf="@+id/spnKind"
-        app:layout_constraintTop_toBottomOf="@+id/tvAlert" />
 
-    <Spinner
-        android:id="@+id/spnKind"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintLeft_toRightOf="@+id/spnCount"
-        app:layout_constraintRight_toRightOf="@+id/btnDate"
-        app:layout_constraintTop_toTopOf="@+id/spnCount" />
+        <TextView
+            android:id="@+id/tvRepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_item_repeat"
+            android:textColor="#000"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/etCount"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/etCount" />
 
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_item_time"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/tvAlert"
-        app:layout_constraintTop_toBottomOf="@+id/spnCount" />
+        <Spinner
+            android:id="@+id/spnRepeat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@+id/etCount"
+            app:layout_constraintRight_toRightOf="@+id/spnKind"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvRepeat"
+            app:layout_constraintHorizontal_bias="0.0" />
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/btnTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/btn_set_time"
-        app:bootstrapBrand="regular"
-        app:bootstrapSize="lg"
-        app:buttonMode="regular"
-        app:layout_constraintLeft_toLeftOf="@+id/tvTime"
-        app:layout_constraintRight_toRightOf="@+id/spnKind"
-        app:layout_constraintTop_toBottomOf="@+id/tvTime"
-        app:roundedCorners="true"
-        app:showOutline="false" />
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/btnChange"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_edit"
+            app:bootstrapSize="lg"
+            app:bootstrapBrand="regular"
+            app:buttonMode="regular"
+            app:showOutline="false"
+            app:roundedCorners="true"
+            app:layout_constraintLeft_toLeftOf="@+id/spnRepeat"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/spnRepeat" />
 
-    <TextView
-        android:id="@+id/tvRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_item_repeat"
-        android:textColor="#000"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="@+id/btnTime"
-        app:layout_constraintTop_toBottomOf="@+id/btnTime" />
-
-    <Spinner
-        android:id="@+id/spnRepeat"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@+id/spnCount"
-        app:layout_constraintRight_toRightOf="@+id/spnKind"
-        android:layout_marginTop="3dp"
-        app:layout_constraintTop_toBottomOf="@+id/tvRepeat" />
-
-    <com.beardedhen.androidbootstrap.BootstrapButton
-        android:id="@+id/btnChange"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_edit"
-        app:bootstrapSize="lg"
-        app:bootstrapBrand="regular"
-        app:buttonMode="regular"
-        app:showOutline="false"
-        app:roundedCorners="true"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/spnRepeat"
-        app:layout_constraintLeft_toLeftOf="@+id/tvRepeat"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="0dp" />
-
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

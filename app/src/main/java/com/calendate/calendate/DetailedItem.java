@@ -26,8 +26,8 @@ import org.joda.time.format.DateTimeFormat;
 
 public class DetailedItem extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    Spinner spnCount, spnKind, spnRepeat;
-    EditText etTitle, etDescription;
+    Spinner spnKind, spnRepeat;
+    EditText etTitle, etDescription, etCount;
     BootstrapButton btnDate, btnChange, btnTime;
     LocalDateTime date;
     FirebaseDatabase mDatabase;
@@ -53,7 +53,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
         etTitle = (EditText) findViewById(R.id.etTitle);
         etDescription = (EditText) findViewById(R.id.etDescription);
         btnDate = (BootstrapButton) findViewById(R.id.btnDate);
-        spnCount = (Spinner) findViewById(R.id.spnCount);
+        etCount = (EditText) findViewById(R.id.etCount);
         spnKind = (Spinner) findViewById(R.id.spnKind);
         btnTime = (BootstrapButton) findViewById(R.id.btnTime);
         spnRepeat = (Spinner) findViewById(R.id.spnRepeat);
@@ -64,10 +64,6 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
         MyUtils.fixBootstrapButton(this, btnDate);
         MyUtils.fixBootstrapButton(this, btnTime);
         MyUtils.fixBootstrapButton(this, btnChange);
-
-        ArrayAdapter<CharSequence> spnCountAdapter = ArrayAdapter.createFromResource(this, R.array.count, R.layout.spinner_item);
-        spnCountAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spnCount.setAdapter(spnCountAdapter);
 
         ArrayAdapter<CharSequence> spnKindAdapter = ArrayAdapter.createFromResource(this, R.array.kind, R.layout.spinner_item);
         spnKindAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -98,7 +94,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
                         etTitle.setText(event.getTitle());
                         etDescription.setText(event.getDescription());
                         btnDate.setText(event.getDate());
-                        spnCount.setSelection(event.getAlertCountPos());
+                        etCount.setText(String.valueOf(event.getAlertCount()));
                         spnKind.setSelection(event.getAlertKindPos());
                         btnTime.setText(event.getTime());
                         spnRepeat.setSelection(event.getRepeatPos());
@@ -132,7 +128,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
 
                     String title = etTitle.getText().toString();
                     String description = etDescription.getText().toString();
-                    int alertCount = Integer.parseInt(spnCount.getSelectedItem().toString());
+                    int alertCount = Integer.parseInt(etCount.getText().toString());
                     int alertKind = spnKind.getSelectedItemPosition();
                     int repeat = spnRepeat.getSelectedItemPosition();
 
@@ -163,7 +159,7 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
     void changeEnabled(Boolean state) {
         etDescription.setEnabled(state);
         etTitle.setEnabled(state);
-        spnCount.setEnabled(state);
+        etCount.setEnabled(state);
         spnKind.setEnabled(state);
         btnTime.setClickable(state);
         spnRepeat.setEnabled(state);
@@ -182,4 +178,5 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
         minutes = minute;
         btnTime.setText(String.valueOf(hours) + ":" + String.valueOf(minutes));
     }
+
 }

@@ -103,13 +103,14 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="@+id/tvAlert"
         app:layout_constraintRight_toLeftOf="@+id/spnKind"
-        app:layout_constraintTop_toBottomOf="@+id/tvAlert" />
+        app:layout_constraintTop_toBottomOf="@+id/tvAlert"
+        android:gravity="center"/>
 
     <Spinner
         android:id="@+id/spnKind"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintHorizontal_weight="3"
         app:layout_constraintLeft_toRightOf="@+id/etCount"
         app:layout_constraintTop_toTopOf="@+id/etCount"
         app:layout_constraintRight_toRightOf="@+id/btnTime"
