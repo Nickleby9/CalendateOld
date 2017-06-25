@@ -146,7 +146,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
         String key = mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + buttonsNumber).push().getKey();
         Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
-        mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + buttonsNumber + "/" + key).setValue(event);
+        mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + buttonsNumber).child(key).setValue(event);
 
         Intent intent = new Intent(AddItem.this, DetailActivity.class);
         intent.putExtra("btnRef", btnRef);
@@ -166,4 +166,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         minutes = minute;
         btnTime.setText(String.valueOf(hours) + ":" + String.valueOf(minutes));
     }
+
+
+
 }

@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements SetButtonTitleDia
 
                 break;
             case R.id.nav_timeline:
-
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame, new TimelineFragment()).commit();
                 break;
             case R.id.nav_sign_out:
                 mAuth.signOut();
