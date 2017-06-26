@@ -118,6 +118,7 @@
     <string name="categories">Categories</string>
     <string name="calendar">Calendar</string>
     <string name="timeline">Timeline</string>
+    <string name="facebook_login">Logging in using your Facebook account</string>
 
 
 </resources>

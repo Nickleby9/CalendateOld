@@ -38,9 +38,9 @@
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textDirection="ltr"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textDirection="ltr" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -56,60 +56,60 @@
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textDirection="ltr"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textDirection="ltr" />
     </android.support.design.widget.TextInputLayout>
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/btn_login"
-        app:bootstrapText="@string/btn_login"
-        app:bootstrapSize="lg"
-        app:bootstrapBrand="regular"
-        app:buttonMode="regular"
-        app:showOutline="false"
-        app:roundedCorners="true"
-        app:layout_constraintLeft_toLeftOf="@+id/tilPassword"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/tilPassword"
-        app:layout_constraintRight_toLeftOf="@+id/btnRegister"
+        android:text="@string/btn_login"
+        app:bootstrapBrand="regular"
+        app:bootstrapSize="lg"
+        app:bootstrapText="@string/btn_login"
+        app:buttonMode="regular"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        android:layout_marginRight="8dp" />
+        app:layout_constraintLeft_toLeftOf="@+id/tilPassword"
+        app:layout_constraintRight_toLeftOf="@+id/btnRegister"
+        app:layout_constraintTop_toBottomOf="@+id/tilPassword"
+        app:roundedCorners="true"
+        app:showOutline="false" />
 
     <com.beardedhen.androidbootstrap.BootstrapButton
         android:id="@+id/btnRegister"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
         android:text="@string/btn_register"
-        app:bootstrapSize="lg"
         app:bootstrapBrand="regular"
+        app:bootstrapSize="lg"
         app:buttonMode="regular"
-        app:showOutline="false"
-        app:roundedCorners="true"
+        app:layout_constraintLeft_toRightOf="@+id/btnLogin"
         app:layout_constraintRight_toRightOf="@+id/tilPassword"
         app:layout_constraintTop_toTopOf="@+id/btnLogin"
-        app:layout_constraintLeft_toRightOf="@+id/btnLogin"
-        android:layout_marginTop="0dp"
-        android:layout_marginLeft="8dp" />
+        app:roundedCorners="true"
+        app:showOutline="false" />
 
     <TextView
         android:id="@+id/idOr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:text="@string/other_signin"
         android:textSize="18sp"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
-        app:layout_constraintHorizontal_bias="0.502"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
     <Button
         android:id="@+id/btnGoogle"
@@ -126,6 +126,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idOr" />
 
+
     <Button
         android:id="@+id/btnFacebook"
         style="@style/FirebaseUI.Button.AccountChooser.FacebookButton"
@@ -136,5 +137,6 @@
         app:layout_constraintLeft_toLeftOf="@+id/btnGoogle"
         app:layout_constraintRight_toRightOf="@+id/btnGoogle"
         app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
+
 
 </android.support.constraint.ConstraintLayout>

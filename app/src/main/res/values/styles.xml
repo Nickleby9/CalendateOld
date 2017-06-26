@@ -21,4 +21,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="facebookButton">
+        <item name="android:drawableLeft">@drawable/ic_facebook_white_22dp</item>
+        <item name="android:background">@drawable/idp_button_background_facebook</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+    </style>
+
+
 </resources>
