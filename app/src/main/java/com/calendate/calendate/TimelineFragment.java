@@ -1,6 +1,7 @@
 package com.calendate.calendate;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,17 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.calendate.calendate.models.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 
 /**
@@ -36,11 +38,13 @@ public class TimelineFragment extends Fragment {
     RecyclerView recycler;
     FirebaseDatabase mDatabase;
     FirebaseUser user;
+    ArrayList<Event> events = new ArrayList<>();
 
     public TimelineFragment() {
         // Required empty public constructor
     }
 
+    ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,12 +60,34 @@ public class TimelineFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         recycler = (RecyclerView) view.findViewById(R.id.recycler);
+
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getContext());
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+
         DatabaseReference ref = mDatabase.getReference("events/" + user.getUid());
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                allEvents((Map<String, Event>), dataSnapshot.getValue());
-//                https://stackoverflow.com/questions/38965731/how-to-get-all-childs-data-in-firebase-database
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot event : snapshot.getChildren()) {
+                        events.add(event.getValue(Event.class));
+                    }
+                }
+                mProgressDialog.dismiss();
+                events.sort(new Comparator<Event>() {
+                    @Override
+                    public int compare(Event o1, Event o2) {
+                        return o1.getDate().compareTo(o2.getDate());
+                    }
+                });
+                ItemsAdapter adapter = new ItemsAdapter(getContext(), events);
+                recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+                recycler.setAdapter(adapter);
             }
 
             @Override
@@ -69,26 +95,42 @@ public class TimelineFragment extends Fragment {
 
             }
         });
-        ItemsAdapter adapter = new ItemsAdapter(getContext(), ref);
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setAdapter(adapter);
+
 
     }
 
-    static class ItemsAdapter extends FirebaseRecyclerAdapter<Event, DetailActivity.ItemsAdapter.ItemsViewHolder> {
-        private Context context;
 
-        public ItemsAdapter(Context context, Query query) {
-            super(Event.class, R.layout.event_item, DetailActivity.ItemsAdapter.ItemsViewHolder.class, query);
+
+    static class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemsViewHolder> {
+        private Context context;
+        LayoutInflater inflater;
+        List<Event> data;
+
+        public ItemsAdapter(Context context, List<Event> data) {
             this.context = context;
+            this.inflater = LayoutInflater.from(context);
+            this.data = data;
         }
 
         @Override
-        protected void populateViewHolder(DetailActivity.ItemsAdapter.ItemsViewHolder viewHolder, Event model, int position) {
-            viewHolder.tvTitle.setText(model.getTitle());
-            viewHolder.tvDate.setText(model.getDate());
-            viewHolder.tvTitle.setHint(model.getKey());
+        public ItemsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = inflater.inflate(R.layout.event_item, parent, false);
+            return new ItemsViewHolder(v);
         }
+
+        @Override
+        public void onBindViewHolder(ItemsViewHolder holder, int position) {
+            Event event = data.get(position);
+            holder.tvTitle.setText(event.getTitle());
+            holder.tvDate.setText(event.getDate());
+            holder.tvTitle.setHint(event.getKey());
+        }
+
+        @Override
+        public int getItemCount() {
+            return data.size();
+        }
+
 
         public static class ItemsViewHolder extends RecyclerView.ViewHolder {
             TextView tvTitle;

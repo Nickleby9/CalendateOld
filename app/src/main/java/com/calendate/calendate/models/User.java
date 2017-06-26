@@ -1,4 +1,4 @@
-package com.calendate.calendate;
+package com.calendate.calendate.models;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;

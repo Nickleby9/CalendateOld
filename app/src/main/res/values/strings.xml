@@ -72,6 +72,10 @@
         <item>Change Image</item>
         <item>Delete</item>
     </string-array>
+    <string-array name="itemOptions">
+        <item>Share</item>
+        <item>Delete</item>
+    </string-array>
 
     <!--Login-->
     <string name="login_error_title">Details incorrect</string>

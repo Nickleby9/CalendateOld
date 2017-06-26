@@ -1,4 +1,4 @@
-package com.calendate.calendate;
+package com.calendate.calendate.models;
 
 import org.joda.time.LocalDateTime;
 
@@ -98,5 +98,19 @@ public class Event {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", date='" + date + '\'' +
+                ", alertCount=" + alertCount +
+                ", alertKindPos=" + alertKindPos +
+                ", time='" + time + '\'' +
+                ", repeatPos=" + repeatPos +
+                ", key='" + key + '\'' +
+                '}';
     }
 }

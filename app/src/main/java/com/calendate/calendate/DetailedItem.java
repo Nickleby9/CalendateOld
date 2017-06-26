@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.calendate.calendate.models.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -78,8 +79,6 @@ public class DetailedItem extends AppCompatActivity implements View.OnClickListe
         btnChange.setOnClickListener(this);
 
         changeEnabled(false);
-
-        mDatabase.getReference("events/" + user.getUid() + "/" + btnRef);
 
         readOnce();
     }
