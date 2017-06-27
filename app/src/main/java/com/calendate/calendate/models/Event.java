@@ -1,10 +1,8 @@
 package com.calendate.calendate.models;
 
-import org.joda.time.LocalDateTime;
+import com.calendate.calendate.MyUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.LocalDateTime;
 
 
 public class Event {
@@ -16,21 +14,21 @@ public class Event {
     int alertKindPos;
     String time;
     int repeatPos;
-    String key;
+    String eventUID;
 
     public Event() {
 
     }
 
-    public Event(String title, String description, LocalDateTime date, int alertCount, int alertKindPos, int hours, int minutes, int repeatPos, String key) {
+    public Event(String title, String description, LocalDateTime date, int alertCount, int alertKindPos, int hours, int minutes, int repeatPos, String eventUID) {
         this.title = title;
         this.description = description;
-        this.date = date.toString("MMMM d, yyyy");
+        this.date = date.toString(MyUtils.dateFormat);
         this.alertCount = alertCount;
         this.alertKindPos = alertKindPos;
         this.time = hours + ":" + minutes;
         this.repeatPos = repeatPos;
-        this.key = key;
+        this.eventUID = eventUID;
     }
 
 
@@ -92,12 +90,12 @@ public class Event {
         this.repeatPos = repeatPos;
     }
 
-    public String getKey() {
-        return key;
+    public String getEventUID() {
+        return eventUID;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setEventUID(String eventUID) {
+        this.eventUID = eventUID;
     }
 
     @Override
@@ -110,7 +108,7 @@ public class Event {
                 ", alertKindPos=" + alertKindPos +
                 ", time='" + time + '\'' +
                 ", repeatPos=" + repeatPos +
-                ", key='" + key + '\'' +
+                ", eventUID='" + eventUID + '\'' +
                 '}';
     }
 }

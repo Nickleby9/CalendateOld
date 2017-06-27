@@ -70,6 +70,8 @@ public class ButtonsFragment extends Fragment{
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final String ARG_BTNREF = "btnRef";
+        private static final String ARG_FRAGNUM = "fragNum";
 
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -277,7 +279,7 @@ public class ButtonsFragment extends Fragment{
                             args.putString("btnRef", btnRef);
                             args.putInt("fragNum", fragNum);
                             f.setArguments(args);
-                            f.show(getFragmentManager(), "setButtonTitleDialog");
+                            f.show(getChildFragmentManager(), "setButtonTitleDialog");
                             break;
                         case 1:
                             //Change image
@@ -298,11 +300,18 @@ public class ButtonsFragment extends Fragment{
         }
 
         public void onButtonPressed(String btnRef, int fragNum) {
+            EventsFragment eventsFragment = new EventsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(ARG_BTNREF, btnRef);
+            bundle.putInt(ARG_FRAGNUM, fragNum);
+            eventsFragment.setArguments(bundle);
 
-            Intent intent = new Intent(getContext(), DetailActivity.class);
-            intent.putExtra("btnRef", btnRef);
-            intent.putExtra("fragNum", fragNum);
-            startActivity(intent);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .addToBackStack("buttonsFragment").replace(R.id.frame, eventsFragment).commit();
+//            Intent intent = new Intent(getContext(), DetailActivity.class);
+//            intent.putExtra("btnRef", btnRef);
+//            intent.putExtra("fragNum", fragNum);
+//            startActivity(intent);
         }
 
         private ProgressDialog dialog;

@@ -69,7 +69,7 @@ public class TimelineFragment extends Fragment {
 
         mProgressDialog.show();
 
-        DatabaseReference ref = mDatabase.getReference("events/" + user.getUid());
+        DatabaseReference ref = mDatabase.getReference("all_events/" + user.getUid());
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -123,7 +123,7 @@ public class TimelineFragment extends Fragment {
             Event event = data.get(position);
             holder.tvTitle.setText(event.getTitle());
             holder.tvDate.setText(event.getDate());
-            holder.tvTitle.setHint(event.getKey());
+            holder.tvTitle.setHint(event.getEventUID());
         }
 
         @Override

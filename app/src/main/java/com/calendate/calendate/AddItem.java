@@ -90,7 +90,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
                 timeDialog.show();
                 break;
             case R.id.btnSave:
-                if (isEmptyFields()){
+                if (isEmptyFields()) {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                     dialog.setTitle(getString(R.string.error));
                     dialog.setMessage(getString(R.string.error_empty_fields));
@@ -140,6 +140,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         String key = mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + buttonsNumber).push().getKey();
         Event event = new Event(title, description, date, alertCount, alertKind, hours, minutes, repeat, key);
         mDatabase.getReference("events/" + user.getUid() + "/" + btnRef + buttonsNumber).child(key).setValue(event);
+        mDatabase.getReference("all_events/" + user.getUid()).child(key).setValue(event);
 
         Intent intent = new Intent(AddItem.this, DetailActivity.class);
         intent.putExtra("btnRef", btnRef);
@@ -149,8 +150,8 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        date = new LocalDateTime(year, month, dayOfMonth, 0, 0);
-        btnDate.setText(date.toString("MMMM d, yyyy"));
+        date = new LocalDateTime(year, month + 1, dayOfMonth + 1, 0, 0);
+        btnDate.setText(date.toString(MyUtils.dateFormat));
     }
 
     @Override
@@ -159,7 +160,6 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener, 
         minutes = minute;
         btnTime.setText(String.valueOf(hours) + ":" + String.valueOf(minutes));
     }
-
 
 
 }

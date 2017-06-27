@@ -10,6 +10,8 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 
 public class MyUtils {
 
+    public static String dateFormat = "dd MMMM, yyyy";
+
     public static String fixEmail(String s) {
         return s.replace(".", ",");
     }
