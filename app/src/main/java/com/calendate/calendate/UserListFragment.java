@@ -17,7 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.calendate.calendate.models.Event;
+import com.calendate.calendate.models.EventRow;
 import com.calendate.calendate.models.User;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -36,12 +39,12 @@ import java.util.ArrayList;
  */
 public class UserListFragment extends BottomSheetDialogFragment {
 
+    private static final String ARG_EVENT = "model";
     RecyclerView rvUsers;
     FirebaseDatabase mDatabase;
     ArrayList<User> users = new ArrayList<>();
     FirebaseUser currentUser;
-    String eventKey, btnRef;
-    int fragNum;
+    EventRow model;
 
     public UserListFragment() {
         // Required empty public constructor
@@ -60,100 +63,71 @@ public class UserListFragment extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         mDatabase = FirebaseDatabase.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        eventKey = getArguments().getString("key");
-        btnRef = getArguments().getString("btnRef");
-        fragNum = getArguments().getInt("fragNum");
+        model = getArguments().getParcelable(ARG_EVENT);
 
         rvUsers = (RecyclerView) view.findViewById(R.id.rvUsers);
         rvUsers.setLayoutManager(new LinearLayoutManager(getContext()));
-        mDatabase.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot user : dataSnapshot.getChildren()) {
-                    users.add(user.getValue(User.class));
-                    UserAdapter adapter = new UserAdapter(getContext(), users);
-                    rvUsers.setAdapter(adapter);
-                }
-            }
+        final Query ref = FirebaseDatabase.getInstance().getReference("users");
+        rvUsers.setAdapter(new UserAdapter(ref, model, this));
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
-    private class UserAdapter extends RecyclerView.Adapter<UserViewHolder>{
+    private class UserAdapter extends FirebaseRecyclerAdapter<User, UserViewHolder> {
 
-        ArrayList<User> data;
-        LayoutInflater inflater;
-        Context context;
+        EventRow eventRow = null;
+        Fragment fragment;
 
-        public UserAdapter(Context context, ArrayList<User> users) {
-            this.context = context;
-            this.inflater = LayoutInflater.from(context);
-            data = users;
+        public UserAdapter(Query query, EventRow eventRow, Fragment fragment) {
+            super(User.class, R.layout.user_item, UserViewHolder.class, query);
+            this.eventRow = eventRow;
+            this.fragment = fragment;
         }
 
         @Override
         public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = inflater.inflate(R.layout.user_item, parent, false);
-            return new UserViewHolder(v);
+            View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+            return new UserViewHolder(v, fragment);
         }
 
         @Override
-        public void onBindViewHolder(UserViewHolder holder, int position) {
-            User user = data.get(position);
-            holder.tvUsername.setText(user.getUsername());
-            holder.tvEmail.setText(user.getEmail());
-            holder.tvUsername.setHint(user.getUid());
-        }
-
-        @Override
-        public int getItemCount() {
-            return data.size();
+        protected void populateViewHolder(UserViewHolder viewHolder, User model, int position) {
+            Context context = viewHolder.tvUsername.getContext();
+            viewHolder.tvUsername.setText(model.getUsername());
+            viewHolder.tvEmail.setText(model.getEmail());
+            viewHolder.user = model;
+            viewHolder.eventRow = eventRow;
         }
     }
 
-    private class UserViewHolder extends RecyclerView.ViewHolder {
+    private static class UserViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvUsername;
         TextView tvEmail;
+        User user;
+        EventRow eventRow;
+        Fragment fragment;
 
-        public UserViewHolder(View itemView) {
+        public UserViewHolder(View itemView, final Fragment fragment) {
             super(itemView);
-
+            this.fragment = fragment;
             tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
             tvEmail = (TextView) itemView.findViewById(R.id.tvEmail);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    DatabaseReference ref = mDatabase.getReference("events/" + currentUser.getUid() + "/" + btnRef + fragNum);
-                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                public void onClick(final View v) {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("all_events").child(user.getUid()).child(eventRow.getEventUID());
+                    ref.setValue(eventRow).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot event : dataSnapshot.getChildren()) {
-                                Event newEvent = event.getValue(Event.class);
-                                if (event.getKey().equals(eventKey)){
-                                    mDatabase.getReference("events/" + tvUsername.getHint().toString() + "/bottomRight2")
-                                            .push().setValue(newEvent).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()){
-                                                Toast.makeText(getContext(), "You shared the event", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(getContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
-                                }
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Toast.makeText(v.getContext(), "The event successfully shared!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(v.getContext(), "Server error", Toast.LENGTH_SHORT).show();
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
+                            if (fragment instanceof DialogFragment){
+                                ((DialogFragment) fragment).dismiss();
+                            }
                         }
                     });
                 }

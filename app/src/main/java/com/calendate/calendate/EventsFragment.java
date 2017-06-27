@@ -146,9 +146,7 @@ public class EventsFragment extends Fragment implements View.OnClickListener {
                                         dialog.dismiss();
                                         if (v.getContext() instanceof FragmentActivity) {
                                             Bundle bundle = new Bundle();
-                                            bundle.putString("btnRef", btnRef);
-                                            bundle.putInt("fragNum", fragNum);
-                                            bundle.putString("key", tvTitle.getHint().toString());
+                                            bundle.putParcelable(ARG_EVENT, model);
                                             userListFragment.setArguments(bundle);
                                             userListFragment.show(((FragmentActivity) v.getContext()).getSupportFragmentManager(), "fragment");
                                         }
